@@ -32,7 +32,7 @@ function part2 (input) {
   return c
 }
 
-console.log('part 1 ex:', part1(ex1))
-console.log('part 1 input:', part1(input))
-console.log('part 2 ex:', part2(ex1))
-console.log('part 2 input:', part2(input))
+console.assert(part1(ex1) === 7, 'Part 1 example', part1(ex1))
+console.log('Part 1 input', part1(input))
+console.assert(part2(ex1) === 5, 'Part 2 example', part2(ex1))
+console.log('Part 2 input:', part2(input))
