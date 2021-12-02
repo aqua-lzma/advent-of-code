@@ -1,12 +1,12 @@
 const fs = require('fs')
+let input = fs.readFileSync('day2.txt', 'utf8')
+
 let ex1 = `forward 5
 down 5
 forward 8
 up 3
 down 8
 forward 2`
-
-let input = fs.readFileSync('day2.txt', 'utf8')
 
 function part1 (input) {
   input = input.split('\n').map(i => {

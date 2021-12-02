@@ -1,15 +1,4 @@
-let ex1 = `199
-200
-208
-210
-200
-207
-240
-269
-260
-263`
-
-let input = `183
+183
 185
 186
 182
@@ -2008,29 +1997,4 @@ let input = `183
 9831
 9841
 9860
-9875`
-
-function part1 (input) {
-  input = input.split('\n').map(i => parseInt(i))
-  let c = 0
-  for (let i = 1; i < input.length; i++) {
-    if (input[i] > input[i - 1]) c++
-  }
-  console.log(c)
-}
-
-function part2 (input) {
-  input = input.split('\n').map(i => parseInt(i))
-  let c = 0
-  for (let i = 3; i < input.length; i++) {
-    if ((input[i] + input[i - 1] + input[i - 2]) > (input[i - 1] + input[i - 2] + input[i - 3])) {
-      c++
-    }
-  }
-  console.log(c)
-}
-
-part1(ex1)
-part1(input)
-part2(ex1)
-part2(input)
+9875
