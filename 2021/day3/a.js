@@ -29,8 +29,7 @@ function part1 (input) {
 
 function part2 (input) {
   input = input.split('\n')
-  let o2Nums = [...input]
-  let co2Nums = [...input]
+  let o2Nums = co2Nums = input
   let o2, co2
   for (let index = 0; index < input[0].length; index++) {
     let o2Mode = o2Nums.filter(value => value[index] === '1').length
