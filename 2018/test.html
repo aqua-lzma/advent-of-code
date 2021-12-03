@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+</head>
+<body>
+<style>
+th {
+  width: 20px
+}
+th:first-of-type {
+  width: initial;
+}
+td:first-of-type {
+  font-family: monospace;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  color: white;
+  background: #333;
+}
+</style>
+<script>
+ 
+ 
+let colours = [
+  '#E53400',
+  '#E40303',
+  '#E40637',
+  '#E4096A',
+  '#E30C9C',
+  '#E30FCC',
+  '#CB12E3',
+  '#9D15E2',
+  '#7018E2',
+  '#461BE2',
+  '#1E20E1',
+  '#214EE1',
+  '#247BE1',
+  '#28A6E0',
+  '#2BCFE0',
+  '#2EE0C9',
+  '#31DFA2',
+  '#34DF7C',
+  '#37DF58',
+  '#3DDF39'
+]
+ 
+function f (data) {
+  let gs = {}
+  let g
+  for (let item of data) {
+    if (item[1].charAt(0) === 'G') g = item[1].split(' ')[1].slice(1)
+    else {
+      let k = item[0].toDateString()
+      gs[g] = gs[g] == null ? {} : gs[g]
+      gs[g][k] = gs[g][k] == null ? Array(60).fill(0) : gs[g][k]
+      if (item[1].charAt(0) === 'f') gs[g][k] = gs[g][k].fill(1, item[0].getMinutes())
+      else gs[g][k] = gs[g][k].fill(0, item[0].getMinutes())
+    }
+  }
+  let table = document.createElement('table')
+  let tr = document.createElement('tr')
+  let th = document.createElement('th')
+  th.textContent = 'Day'
+  tr.appendChild(th)
+  for (let i = 0; i < 60; i++) {
+   let th = document.createElement('th')
+   th.textContent = i
+   tr.appendChild(th)
+ }
+ table.appendChild(tr)
+ let m = [0, 0, 0]
+ for (let g in gs) {
+   let t = Array(60).fill(0)
+   for (let d in gs[g]) {
+     let tr = document.createElement('tr')
+     let td = document.createElement('td')
+     td.textContent = `${g} ${d}`
+     tr.appendChild(td)
+     for (let i = 0; i < 60; i++) {
+       t[i] += gs[g][d][i]
+       let td = document.createElement('td')
+       td.textContent = gs[g][d][i]
+       td.style.backgroundColor = gs[g][d][i] ? '#D2797B' : '#7987D2'
+       tr.appendChild(td)
+     }
+     table.appendChild(tr)
+   }
+   let max = Math.max(...t)
+   if (max > m[2]) m = [g, t.indexOf(max), max]
+    gs[g]['max'] = t
+  }
+  document.body.appendChild(table)
+  let p = document.createElement('p')
+  p.textContent = 'Totals:'
+  document.body.appendChild(p)
+  table = document.createElement('table')
+  tr = document.createElement('tr')
+  th = document.createElement('th')
+  th.textContent = 'Guard No'
+  tr.appendChild(th)
+  for (let i = 0; i < 60; i++) {
+   let th = document.createElement('th')
+   th.textContent = i
+   tr.appendChild(th)
+ }
+ table.appendChild(tr)
+ for (let g in gs) {
+   let tr = document.createElement('tr')
+   let td = document.createElement('td')
+   td.textContent = g
+   tr.appendChild(td)
+   for (let i = 0; i < 60; i++) {
+     let td = document.createElement('td')
+     td.textContent = gs[g]['max'][i]
+     td.style.backgroundColor = colours[gs[g]['max'][i]]
+     tr.appendChild(td)
+   }
+   table.appendChild(tr)
+ }
+ document.body.appendChild(table)
+ 
+ return gs
+}
+ 
+function run() {
+ let text = document.querySelector('textarea').value
+ console.log(text)
+ let data = text.split('\n').slice(0, -1).map(line => [new Date(line.split('] ')[0].slice(1)), line.split('] ')[1]]).sort((a, b) => a[0] - b[0])
+  console.log(data)
+  document.querySelector('div').remove()
+  f(data)
+}
+ 
+</script>
+<div>
+<textarea></textarea>
+<button onclick="run()">yeet</button>
+</div>
+</body>
+
+    </html>

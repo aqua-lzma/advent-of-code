@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+  <script>
+let canvas
+let ctx
+let data
+let seconds = 0
+function run() {
+  let text = document.querySelector('textarea').value
+  data = text.split('\n').map(x => x.replace('position=<', '').replace('> velocity=<', ',').replace('>', '').split(',').map(Number)).slice(0, -1)
+  let minx = Math.min(...data.map(x => x[0]))
+  let miny = Math.min(...data.map(x => x[1]))
+  let map = data.map(([x, y]) => [x - minx, y - miny])
+  let maxx = Math.max(...map.map(x => x[0]))
+  let maxy = Math.max(...map.map(x => x[1]))
+  console.log(data)
+  console.log(minx, miny, maxx, maxy)
+  canvas = document.createElement('canvas')
+  canvas.width = maxx + 1
+  canvas.height = maxy + 1
+  document.body.appendChild(canvas)
+  ctx = canvas.getContext('2d')
+  ctx.fillStyle = '#000'
+  for (let [x, y] of map) {
+    ctx.fillRect(x, y, 1, 1)
+  }
+}
+function draw() {
+  let minx = Math.min(...data.map(x => x[0]))
+  let miny = Math.min(...data.map(x => x[1]))
+  let pmaxx = Math.max(...data.map(x => x[0]))
+  let pmaxy = Math.max(...data.map(x => x[1]))
+  let map = data.map(([x, y]) => [x - minx, y - miny])
+  let maxx = Math.max(...map.map(x => x[0]))
+  let maxy = Math.max(...map.map(x => x[1]))
+  console.log(minx, miny, pmaxx, pmaxy, maxx, maxy)
+  canvas.width = maxx + 1
+  canvas.height = maxy + 1
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
+  for (let [x, y] of map) {
+    ctx.fillRect(x, y, 1, 1)
+  }
+}
+function iter(n) {
+  // let n = Number(document.querySelector('input').value)
+  if (isNaN(n)) return console.log('NaN')
+  seconds += n
+  data = data.map(([x, y, dx, dy]) => [x + (dx * n), y + (dy * n), dx, dy])
+  draw()
+  console.log('seconds', seconds)
+}
+function anim() {
+  run()
+  let minx = 0
+  while (true) {
+    let cminx = Math.min(...data.map(x => x[0]))
+    if (cminx > minx) {
+      iter(-1)
+      break
+    }
+    else {
+      iter(1)
+      minx = cminx
+    }
+  }
+}
+  </script>
+</head>
+<body>
+  <textarea></textarea>
+  <input type=text>
+  <button onclick="run()">Yeet</button>
+  <button onclick="iter()">Iter</button>
+  <button onclick="anim()">Anim</button>
+</body>
+</html>
