@@ -11,7 +11,9 @@ function part2 (input) {
 
 }
 
-console.assert(part1(ex1) === null, 'Part 1 example', part1(ex1))
-console.log('Part 1 input', part1(input))
-console.assert(part2(ex1) === null, 'Part 2 example', part2(ex1))
+let p1ex1 = part1(ex1)
+let p2ex1 = part2(ex1)
+console.assert(p1ex1 === undefined, 'Part 1 example', p1ex1)
+console.log('Part 1 input:', part1(input))
+console.assert(p2ex1 === undefined, 'Part 2 example', p2ex1)
 console.log('Part 2 input:', part2(input))
