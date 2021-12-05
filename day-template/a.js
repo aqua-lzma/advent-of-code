@@ -3,17 +3,29 @@ let input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
 
 let ex1 = ``
 
-function part1 (input) {
+function parseInput (input) {
+  return input
+}
 
+function part1 (input) {
+  input = parseInput(input)
 }
 
 function part2 (input) {
-
+  input = parseInput(input)
 }
 
-let p1ex1 = part1(ex1)
-let p2ex1 = part2(ex1)
-console.assert(p1ex1 === undefined, 'Part 1 example', p1ex1)
-console.log('Part 1 input:', part1(input))
-console.assert(p2ex1 === undefined, 'Part 2 example', p2ex1)
-console.log('Part 2 input:', part2(input))
+function log (name, func, input, expected) {
+  console.time(name)
+  let out = func(input)
+  console.timeEnd(name)
+  if (expected != null) {
+    console.assert(out === expected, 'expected:', expected)
+  }
+  console.warn(name, ':', out, '\n')
+}
+
+log('Part 1 example', part1, ex1)
+log('Part 1 input', part1, input)
+log('Part 2 example', part2, ex1)
+log('Part 2 input', part2, input)
