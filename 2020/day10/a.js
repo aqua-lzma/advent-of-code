@@ -93,6 +93,6 @@ function log (name, func, input, expected) {
 log('Part 1 example 1', part1, ex1, 35)
 log('Part 1 example 2', part1, ex2, 220)
 log('Part 1 input', part1, input)
-log('Part 2 example 1', part2, ex1)
-log('Part 2 example 2', part2, ex2)
+log('Part 2 example 1', part2, ex1, 8)
+log('Part 2 example 2', part2, ex2, 19208)
 log('Part 2 input', part2, input)
