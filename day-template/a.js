@@ -4,7 +4,7 @@ let input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
 let ex1 = ``
 
 function parseInput (input) {
-  return input
+  return input.split('\n')
 }
 
 function part1 (input) {

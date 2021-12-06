@@ -24,7 +24,7 @@ function hslToRgb(h, s, l){
   const canvas = document.createElement('canvas')
   document.body.appendChild(canvas)
   const ctx = canvas.getContext('2d')
-  let input = await (await fetch('bigboy.txt')).text()
+  let input = await (await fetch('input.txt')).text()
 
   input = input.split('\n').map(line => line.split(' -> ').map(xy => xy.split(',').map(i => parseInt(i))))
   let size = Math.max(...input.flat(2)) + 1
