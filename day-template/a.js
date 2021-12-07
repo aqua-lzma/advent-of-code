@@ -17,15 +17,20 @@ function part2 (input) {
 
 function log (name, func, input, expected) {
   console.time(name)
-  let out = func(input)
+  let out = func(...input)
   console.timeEnd(name)
   if (expected != null) {
-    console.assert(out === expected, 'expected:', expected)
+    let assertion = (typeof expected === 'function')
+      ? expected(out)
+      : expected === out
+    console.assert(assertion, 'expected:', expected)
   }
-  console.warn(name, ':', out, '\n')
+  out = out.toString()
+  if (out.length < 1000) console.warn(name, ':', out)
+  console.log('---')
 }
 
-log('Part 1 example', part1, ex1)
-log('Part 1 input', part1, input)
-log('Part 2 example', part2, ex1)
-log('Part 2 input', part2, input)
+log('Part 1 example', part1, [ex1])
+log('Part 1 input', part1, [input])
+log('Part 2 example', part1, [ex1])
+log('Part 2 input', part1, [input])

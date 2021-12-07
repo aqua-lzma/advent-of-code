@@ -8,26 +8,6 @@ let ex5 = `2,3,1`
 let ex6 = `3,2,1`
 let ex7 = `3,1,2`
 
-function part1Old (input, target) {
-  if (target == null) target = 2020
-  input = input.split(',').map(i => parseInt(i))
-  let map = Object.fromEntries(input.map((v, i) => [v, [null, i]]))
-  let last = input[input.length - 1]
-  for (let i = input.length; i < target; i++) {
-    if (map[last][0] == null) {
-      if (map[0] == null) map[0] = [null, i]
-      else map[0] = [map[0][1], i]
-      last = 0
-    } else {
-      let num = i - (map[last][0] + 1)
-      if (map[num] == null) map[num] = [null, i]
-      else map[num] = [map[num][1], i]
-      last = num
-    }
-  }
-  return last
-}
-
 function part1 (input) {
   input = input.split(',').map(i => parseInt(i))
   let map = new Map(input.map((v, i) => [v, i]))
