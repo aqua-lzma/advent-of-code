@@ -25,12 +25,12 @@ function log (name, func, input, expected) {
       : expected === out
     console.assert(assertion, 'expected:', expected)
   }
-  out = out.toString()
+  out = String(out)
   if (out.length < 1000) console.warn(name, ':', out)
   console.log('---')
 }
 
 log('Part 1 example', part1, [ex1])
 log('Part 1 input', part1, [input])
-log('Part 2 example', part1, [ex1])
-log('Part 2 input', part1, [input])
+log('Part 2 example', part2, [ex1])
+log('Part 2 input', part2, [input])
