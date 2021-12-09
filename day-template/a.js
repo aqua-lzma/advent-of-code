@@ -23,7 +23,7 @@ function log (name, func, input, expected) {
     let assertion = (typeof expected === 'function')
       ? expected(out)
       : expected === out
-    console.assert(assertion, 'expected:', expected)
+    if (!assertion) console.warn('Expected:', expected)
   }
   out = String(out)
   if (out.length < 1000) console.warn(name, ':', out)
