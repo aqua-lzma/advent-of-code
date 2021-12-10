@@ -1,0 +1,12 @@
+{
+  "name": "advent-of-code",
+  "description": "My AoC solutions in JS",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aqua-lzma/advent-of-code.git"
+  },
+  "type": "module",
+  "dependencies": {
+    "axios": "^0.24.0"
+  }
+}

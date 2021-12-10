@@ -14,8 +14,8 @@ function parseInput (input) {
 
 function part1 (input) {
   input = parseInput(input)
-  let height = input.length
   let width = input[0].length
+  let height = input.length
   let risks = []
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
@@ -31,44 +31,6 @@ function part1 (input) {
     }
   }
   return risks.reduce((sum, cur) => sum + cur)
-}
-
-function part2Old (input) {
-  input = parseInput(input)
-  let height = input.length
-  let width = input[0].length
-  let risks = []
-  for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width; x++) {
-      if (input[y][x] === 9) continue
-      if (
-        (y - 1 < 0       || input[y - 1][x] > input[y][x]) &&
-        (y + 1 >= height || input[y + 1][x] > input[y][x]) &&
-        (x - 1 < 0       || input[y][x - 1] > input[y][x]) &&
-        (x + 1 >= width  || input[y][x + 1] > input[y][x])
-      ) {
-        risks.push([x, y])
-      }
-    }
-  }
-  let basins = []
-  for (let coords of risks) {
-    let coordSet = new Set([coords.join(',')])
-    let prevSize = 0
-    while (coordSet.size !== prevSize) {
-      prevSize = coordSet.size
-      for (let coord of coordSet) {
-        let [x, y] = coord.split(',').map(i => parseInt(i))
-        if (y - 1 >= 0     && input[y - 1][x] !== 9) coordSet.add([x, y - 1].join(','))
-        if (y + 1 < height && input[y + 1][x] !== 9) coordSet.add([x, y + 1].join(','))
-        if (x - 1 >= 0     && input[y][x - 1] !== 9) coordSet.add([x - 1, y].join(','))
-        if (x + 1 < width  && input[y][x + 1] !== 9) coordSet.add([x + 1, y].join(','))
-      }
-    }
-    basins.push(coordSet.size)
-  }
-  basins.sort((a, b) => a - b)
-  return basins.slice(-3).reduce((prod, cur) => prod * cur)
 }
 
 function part2 (input) {
@@ -122,8 +84,8 @@ function log (name, func, input, expected) {
   console.log('---')
 }
 
-//log('Part 1 example:', part1, [ex1], 15)
-//log('Part 1 input:', part1, [input])
+log('Part 1 example:', part1, [ex1], 15)
+log('Part 1 input:', part1, [input])
 log('Part 2 example:', part2, [ex1], 1134)
 log('Part 2 input:', part2, [input])
 log('Part 1 big boy:', part1, [bigboy])
