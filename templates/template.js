@@ -1,8 +1,7 @@
 import { log, getInput } from '../helpers.js'
 
 const input = await getInput(2015, 1)
-
-let ex1 = ``
+const ex1 = ``
 
 function parseInput (input) {
   return input.split('\n')
