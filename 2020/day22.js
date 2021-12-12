@@ -43,14 +43,14 @@ function part2 (input) {
   let [deck1, deck2] = parseInput(input)
   let fullHistory = new Map()
   function play (deck1, deck2) {
-    let startId = `${deck1.join('')};${deck2.join('')}`
+    let startId = `${deck1.join(',')};${deck2.join(',')}`
     let alreadyPlayed = fullHistory.get(startId)
     if (alreadyPlayed != null) return alreadyPlayed
     let history = []
     while (deck1.length !== 0 && deck2.length !== 0) {
-      let id = `${deck1.join('')};${deck2.join('')}`
+      let id = `${deck1.join(',')};${deck2.join(',')}`
       if (history.includes(id)) {
-        fullHistory.set(id, 1)
+        fullHistory.set(startId, 1)
         return 1
       }
       history.push(id)
