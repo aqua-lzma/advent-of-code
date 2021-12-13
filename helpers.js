@@ -44,7 +44,7 @@ export function log (name, func, input, expected) {
     if (!assertion) console.warn('Expected:', expected)
   }
   out = String(out)
-  if (out.length < 1000) console.warn(name, ':', out)
+  if (out.length < 5000) console.warn(name, ':', out)
   else console.warn(name, ':', `${out.slice(0, 10)} <${out.length}> ${out.slice(-10)}`)
   console.log('---')
 }
