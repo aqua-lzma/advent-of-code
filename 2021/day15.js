@@ -17,88 +17,143 @@ function parseInput (input) {
   return input.split('\n').map(line => line.split('').map(i => parseInt(i)))
 }
 
-function part1 (input) {
+const parent = i => ((i + 1) >>> 1) - 1;
+const left = i => (i << 1) + 1;
+const right = i => (i + 1) << 1;
+class PriorityQueue {
+  constructor(comparator = (a, b) => a > b) {
+    this._heap = [];
+    this._comparator = comparator;
+  }
+  size() {
+    return this._heap.length;
+  }
+  isEmpty() {
+    return this.size() == 0;
+  }
+  peek() {
+    return this._heap[0];
+  }
+  push(...values) {
+    values.forEach(value => {
+      this._heap.push(value);
+      this._siftUp();
+    });
+    return this.size();
+  }
+  pop() {
+    const poppedValue = this.peek();
+    const bottom = this.size() - 1;
+    if (bottom > 0) {
+      this._swap(0, bottom);
+    }
+    this._heap.pop();
+    this._siftDown();
+    return poppedValue;
+  }
+  replace(value) {
+    const replacedValue = this.peek();
+    this._heap[0] = value;
+    this._siftDown();
+    return replacedValue;
+  }
+  _greater(i, j) {
+    return this._comparator(this._heap[i], this._heap[j]);
+  }
+  _swap(i, j) {
+    [this._heap[i], this._heap[j]] = [this._heap[j], this._heap[i]];
+  }
+  _siftUp() {
+    let node = this.size() - 1;
+    while (node > 0 && this._greater(node, parent(node))) {
+      this._swap(node, parent(node));
+      node = parent(node);
+    }
+  }
+  _siftDown() {
+    let node = 0;
+    while (
+      (left(node) < this.size() && this._greater(left(node), node)) ||
+      (right(node) < this.size() && this._greater(right(node), node))
+    ) {
+      let maxChild = (right(node) < this.size() && this._greater(right(node), left(node))) ? right(node) : left(node);
+      this._swap(node, maxChild);
+      node = maxChild;
+    }
+  }
+}
+
+function part1 (input, expandGrid) {
   input = parseInput(input)
   let width = input[0].length
   let height = input.length
-  let dijkstras = Array(height).fill().map(() => Array(width).fill().map(() => [Infinity, null]))
-  dijkstras[0][0] = [0, null]
-  for (let i = 0; i < 150; i++) {
-    for (let y = 0; y < height; y++) {
-      for (let x = 0; x < width; x++) {
-        if (x === 0 && y === 0) continue
-        for (let [dx, dy] of [[0, 1], [0, -1], [1, 0], [-1, 0]]) {
-          if (dx === 0 && dy === 0) continue
-          if ((x + dx) < 0 || (x + dx) >= width) continue
-          if ((y + dy) < 0 || (y + dy) >= width) continue
-          let distance = input[y][x] + dijkstras[y + dy][x + dx][0]
-          if (distance < dijkstras[y][x][0]) {
-            dijkstras[y][x] = [distance, [x + dx, y + dy]]
-          }
+  
+  let grid
+  if (expandGrid) {
+    width *= 5
+    height *= 5
+    let iwidth = input[0].length
+    let iheight = input.length
+    grid = Array(height).fill().map(() => Array(width).fill(0))
+    grid = grid.map((row, y) => row.map((n, x) => {
+      let ix = x % iwidth
+      let iy = y % iheight
+      let dx = ~~(x / iwidth)
+      let dy = ~~(y / iheight)
+      return (input[iy][ix] + dx + dy) % 9 || 9
+    }))
+  } else grid = input
+
+  let targetx = width - 1
+  let targety = height - 1
+
+  let cameFrom = Array(height).fill().map(() => Array(width).fill())
+  let gScore = Array(height).fill().map(() => Array(width).fill(Infinity))
+  let fScore = Array(height).fill().map(() => Array(width).fill(Infinity))
+  gScore[0][0] = 0
+  fScore[0][0] = 0
+  let openSet = new PriorityQueue(([ax, ay], [bx, by]) => fScore[ay][ax] < fScore[by][bx])
+  openSet.push([0, 0])
+  function h1 (x, y) { // 264619
+    let dx = Math.abs(x - targetx)
+    let dy = Math.abs(y - targety)
+    return dx + dy
+  }
+  function h2 (x, y) { // 259290
+    let dx = Math.abs(x - targetx)
+    let dy = Math.abs(y - targety)
+    return Math.sqrt((dx ** 2) + (dy ** 2))
+  }
+  function h (x, y) { // 249998
+    let dx = Math.abs(x - targetx)
+    let dy = Math.abs(y - targety)
+    return 0
+  }
+  let checked = 0
+  while (openSet.size() !== 0) {
+    checked++
+    let [x, y] = openSet.pop()
+    for (let [dx, dy] of [[0, 1], [0, -1], [1, 0], [-1, 0]]) {
+      let nx = x + dx
+      let ny = y + dy
+      if (nx < 0 || nx >= width) continue
+      if (ny < 0 || ny >= height) continue
+      let distance = gScore[y][x] + grid[ny][nx]
+      if (distance < gScore[ny][nx]) {
+        cameFrom[ny][nx] = [x, y]
+        gScore[ny][nx] = distance
+        fScore[ny][nx] = distance + h(nx, ny)
+        openSet.push([nx, ny])
+        if (nx === targetx && ny === targety) {
+          console.log(checked)
+          return distance
         }
       }
     }
   }
-  let print = Array(height).fill().map(() => Array(width).fill(' '))
-  let target = [width - 1, height - 1]
-  while (target !== null) {
-    let [x, y] = target
-    print[y][x] = input[y][x]
-    target = dijkstras[y][x][1]
-  }
-  // console.log(print.map(row => row.join('')).join('\n'))
-  // writeFileSync('2021day15.txt', print.map(row => row.join('')).join('\n'))
-  // debugger
-  return dijkstras.at(-1).at(-1)[0]
 }
 
-function part2 (input) {
-  input = parseInput(input)
-  let iwidth = input[0].length
-  let iheight = input.length
-  let width = iwidth * 5
-  let height = iheight * 5
-  let grid = Array(height).fill().map(() => Array(width).fill(0))
-  grid = grid.map((row, y) => row.map((n, x) => {
-    let dx = ~~(x / iwidth)
-    let dy = ~~(y / iheight)
-    let ix = x % iwidth
-    let iy = y % iheight
-    return (input[iy][ix] + dx + dy) % 9 || 9
-  }))
-  let dijkstras = Array(height).fill().map(() => Array(width).fill().map(() => [Infinity, null]))
-  dijkstras[0][0] = [0, null]
-  for (let i = 0; i < 150; i++) {
-    for (let y = 0; y < height; y++) {
-      for (let x = 0; x < width; x++) {
-        if (x === 0 && y === 0) continue
-        for (let [dx, dy] of [[0, 1], [0, -1], [1, 0], [-1, 0]]) {
-          if (dx === 0 && dy === 0) continue
-          if ((x + dx) < 0 || (x + dx) >= width) continue
-          if ((y + dy) < 0 || (y + dy) >= width) continue
-          let distance = grid[y][x] + dijkstras[y + dy][x + dx][0]
-          if (distance < dijkstras[y][x][0]) {
-            dijkstras[y][x] = [distance, [x + dx, y + dy]]
-          }
-        }
-      }
-    }
-  }
-  let print = Array(height).fill().map(() => Array(width).fill(' '))
-  let target = [width - 1, height - 1]
-  while (target !== null) {
-    let [x, y] = target
-    print[y][x] = grid[y][x]
-    target = dijkstras[y][x][1]
-  }
-  // console.log(print.map(row => row.join('')).join('\n'))
-  // writeFileSync('2021day15.txt', print.map(row => row.join('')).join('\n'))
-  // writeFileSync('2021day15.txt', grid.map(row => row.join('')).join('\n'))
-  // debugger
-  return dijkstras.at(-1).at(-1)[0]
-}
-
-log('Part 1 example', part1, [ex1], 40)
-log('Part 1 input', part1, [input], 361)
-log('Part 2 example', part2, [ex1])
-log('Part 2 input', part2, [input])
+log('Part 1 example', part1, [ex1, false], 40)
+log('Part 1 input', part1, [input, false])
+log('Part 2 example', part1, [ex1, true], 315)
+log('Part 2 input', part1, [input, true])
