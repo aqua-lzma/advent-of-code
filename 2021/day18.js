@@ -45,74 +45,57 @@ function parseInput (input) {
   return input.split('\n').map(line => JSON.parse(line))
 }
 
-function treeify (arr) {
-  const tree = new Map([['0', arr]])
-  while (Array.from(tree.values()).some(v => Array.isArray(v))) {
-    for (const [key, value] of tree) {
+function expand (line) {
+  const expanded = [[line, 0]]
+  while (expanded.flat().some(i => Array.isArray(i))) {
+    for (let i = 0; i < expanded.length; i++) {
+      const [value, depth] = expanded[i]
       if (Array.isArray(value)) {
-        tree.set(key + 'a', value[0])
-        tree.set(key + 'b', value[1])
-        tree.set(key, null)
+        expanded.splice(i, 1, ...[
+          [-1, depth],
+          [value[0], depth + 1],
+          [value[1], depth + 1]
+        ])
       }
     }
   }
-  return tree
+  return expanded.slice(1)
 }
 
-function arrayify (tree, key) {
-  const a = tree.get(key + 'a')
-  const b = tree.get(key + 'b')
-  return [
-    a != null ? a : arrayify(tree, key + 'a'),
-    b != null ? b : arrayify(tree, key + 'b')
-  ]
+function shrink (array) {
+  let d = 0
+  let line = array.reduce((line, [value, depth]) => {
+    const dif = d - depth
+    if (dif < 0) line += '['
+    if (dif > 0) line += ']'.repeat(dif) + ','
+    if (dif === 0) line += ','
+    if (value !== -1) line += String(value)
+    d = depth
+    return line
+  }, '')
+  line += ']'.repeat(d)
+  return JSON.parse(line)
 }
 
 function reduce (line) {
-  const tree = treeify(line)
-  let array = Array.from(tree)
-  array.sort(([key1], [key2]) => key1.localeCompare(key2))
-  let keys = array.map(([key]) => key)
-  let vals = array.map(([, val]) => val)
-  while (array.some(([key, val]) => key.length >= 6 || val > 9)) {
-    const nest = keys.findIndex(key => key.length === 6)
-    const split = vals.findIndex(val => val > 9)
+  const array = expand(line)
+  while (array.some(([value, depth]) => depth > 4 || value > 9)) {
+    const nest = array.findIndex(([, depth]) => depth > 4)
+    const split = array.findIndex(([val]) => val > 9)
     if (nest !== -1) {
-      const aKey = keys[nest]
-      const bKey = keys[nest + 1]
-      const aVal = vals[nest]
-      const bVal = vals[nest + 1]
-      const parent = aKey.slice(0, -1)
-      const lIndex = nest - 1 - vals.slice(0, nest).reverse().findIndex(val => val != null)
-      if (lIndex !== -1) {
-        const leftKey = keys[lIndex]
-        const leftVal = vals[lIndex] + aVal
-        tree.set(leftKey, leftVal)
-      }
-      const rIndex = nest + 2 + vals.slice(nest + 2).findIndex(val => val != null)
-      if (rIndex !== -1) {
-        const rightKey = keys[rIndex]
-        const rightVal = vals[rIndex] + bVal
-        tree.set(rightKey, rightVal)
-      }
-      tree.set(parent, 0)
-      tree.delete(aKey)
-      tree.delete(bKey)
+      const lIndex = nest - 1 - array.slice(0, nest).reverse().findIndex(([val]) => val !== -1)
+      const rIndex = nest + 2 + array.slice(nest + 2).findIndex(([val]) => val !== -1)
+      if (lIndex !== -1) array[lIndex][0] = array[lIndex][0] + array[nest][0]
+      if (rIndex !== -1) array[rIndex][0] = array[rIndex][0] + array[nest + 1][0]
+      array.splice(nest - 1, 3, [0, array[nest][1] - 1])
     } else if (split !== -1) {
-      const key = keys[split]
-      const val = vals[split]
-      const a = Math.floor(val / 2)
-      const b = Math.ceil(val / 2)
-      tree.set(key, null)
-      tree.set(key + 'a', a)
-      tree.set(key + 'b', b)
+      const [val, depth] = array[split]
+      array[split][0] = -1
+      array.splice(split + 1, 0, [Math.floor(val / 2), depth + 1])
+      array.splice(split + 2, 0, [Math.ceil(val / 2), depth + 1])
     }
-    array = Array.from(tree)
-    array.sort(([key1], [key2]) => key1.localeCompare(key2))
-    keys = array.map(([key]) => key)
-    vals = array.map(([, val]) => val)
   }
-  return arrayify(tree, '0')
+  return shrink(array)
 }
 
 function magnitude (line) {
@@ -125,7 +108,7 @@ function magnitude (line) {
 
 function part1 (input) {
   input = parseInput(input)
-  let sum = reduce(input[0])
+  let sum = input[0]
   for (const line of input.slice(1)) {
     sum = reduce([sum, line])
   }
@@ -145,34 +128,13 @@ function part2 (input) {
   return max
 }
 
-log('Part 1 example 1', part1, [ex1], ([sum, mag]) => (
-  sum === '[[1,2],[[3,4],5]]' &&
-  mag === 143
-))
-log('Part 1 example 2', part1, [ex2], ([sum, mag]) => (
-  sum === '[[[[0,7],4],[[7,8],[6,0]]],[8,1]]' &&
-  mag === 1384
-))
-log('Part 1 example 3', part1, [ex3], ([sum, mag]) => (
-  sum === '[[[[1,1],[2,2]],[3,3]],[4,4]]' &&
-  mag === 445
-))
-log('Part 1 example 4', part1, [ex4], ([sum, mag]) => (
-  sum === '[[[[3,0],[5,3]],[4,4]],[5,5]]' &&
-  mag === 971
-))
-log('Part 1 example 4', part1, [ex5], ([sum, mag]) => (
-  sum === '[[[[5,0],[7,4]],[5,5]],[6,6]]' &&
-  mag === 1137
-))
-log('Part 1 example 4', part1, [ex6], ([sum, mag]) => (
-  sum === '[[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]' &&
-  mag === 3488
-))
-log('Part 1 example 5', part1, [ex7], ([sum, mag]) => (
-  sum === '[[[[6,6],[7,6]],[[7,7],[7,0]]],[[[7,7],[7,7]],[[7,8],[9,9]]]]' &&
-  mag === 4140
-))
+log('Part 1 example 1', part1, [ex1], ([sum, mag]) => (sum === '[[1,2],[[3,4],5]]' && mag === 143))
+log('Part 1 example 2', part1, [ex2], ([sum, mag]) => (sum === '[[[[0,7],4],[[7,8],[6,0]]],[8,1]]' && mag === 1384))
+log('Part 1 example 3', part1, [ex3], ([sum, mag]) => (sum === '[[[[1,1],[2,2]],[3,3]],[4,4]]' && mag === 445))
+log('Part 1 example 4', part1, [ex4], ([sum, mag]) => (sum === '[[[[3,0],[5,3]],[4,4]],[5,5]]' && mag === 791))
+log('Part 1 example 5', part1, [ex5], ([sum, mag]) => (sum === '[[[[5,0],[7,4]],[5,5]],[6,6]]' && mag === 1137))
+log('Part 1 example 6', part1, [ex6], ([sum, mag]) => (sum === '[[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]' && mag === 3488))
+log('Part 1 example 7', part1, [ex7], ([sum, mag]) => (sum === '[[[[6,6],[7,6]],[[7,7],[7,0]]],[[[7,7],[7,7]],[[7,8],[9,9]]]]' && mag === 4140))
 
 log('Part 1 input', part1, [input])
 
