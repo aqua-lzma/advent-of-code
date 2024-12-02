@@ -48,5 +48,5 @@ function part2 (input) {
 
 log('Part 1 example', part1, [ex1], 11)
 log('Part 1 input', part1, [input])
-log('Part 2 example', part2, [ex1])
+log('Part 2 example', part2, [ex1], 31)
 log('Part 2 input', part2, [input])

@@ -23,7 +23,8 @@ export async function getInput (year, day) {
       headers: { Cookie: `session=${cookie}` }
     })
   } catch (e) {
-    console.error(e)
+    console.error(e.message)
+    console.error(e.response.data)
     process.exit()
   }
   console.log('Success')
