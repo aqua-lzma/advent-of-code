@@ -1,15 +1,8 @@
-import { log, getInput } from '../helpers.js'
+import { log, getInput } from '../helpers/aoc.js'
+
+// WIP
 
 const input = await getInput(2021, 19)
-const ex0 = `--- scanner 0 ---
-0,2,0
-4,1,0
-3,3,0
-
---- scanner 1 ---
--1,-1,0
--5,0,0
--2,1,0`
 const ex1 = `--- scanner 0 ---
 404,-588,-901
 528,-643,409
@@ -148,109 +141,144 @@ const ex1 = `--- scanner 0 ---
 30,-46,-14`
 
 function parseInput (input) {
-  return Object.fromEntries(input.split('\n\n').map(scanner => {
+  return input.split('\n\n').map(scanner => {
     scanner = scanner.split('\n')
-    const id = parseInt(scanner[0].slice(12, -4))
     const beacons = scanner.slice(1).map(beacon => beacon.split(',').map(i => parseInt(i)))
-    return [id, beacons]
-  }))
+    return beacons
+  })
 }
 
-function rotFlip (scanner, i) {
-  const flip = i % 6
+function turnRotate (coords, i) {
+  const turn = i % 6
+  /* eslint-disable array-bracket-spacing, no-multi-spaces */
   // 0 = Forward
-  if (flip === 1) scanner = scanner.map(([x, y, z]) => [z, y, -x]) // Right
-  if (flip === 2) scanner = scanner.map(([x, y, z]) => [-x, y, -z]) // Behind
-  if (flip === 3) scanner = scanner.map(([x, y, z]) => [-z, y, x]) // Left
-  if (flip === 4) scanner = scanner.map(([x, y, z]) => [y, -x, z]) // Up
-  if (flip === 5) scanner = scanner.map(([x, y, z]) => [-y, x, z]) // Down
+  if (turn === 1) coords = coords.map(([x, y, z]) => [ z,  y, -x]) // Right
+  if (turn === 2) coords = coords.map(([x, y, z]) => [-x,  y, -z]) // Behind
+  if (turn === 3) coords = coords.map(([x, y, z]) => [-z,  y,  x]) // Left
+  if (turn === 4) coords = coords.map(([x, y, z]) => [ y, -x,  z]) // Up
+  if (turn === 5) coords = coords.map(([x, y, z]) => [-y,  x,  z]) // Down
   const rot = ~~(i / 6)
   // 0 = 0 deg
-  if (rot === 1) scanner = scanner.map(([x, y, z]) => [x, z, -y]) // 90 deg
-  if (rot === 2) scanner = scanner.map(([x, y, z]) => [x, -y, -z]) // 180 deg
-  if (rot === 3) scanner = scanner.map(([x, y, z]) => [x, -z, y]) // 270 deg
-  return scanner
+  if (rot === 1) coords = coords.map(([x, y, z]) => [x,  z, -y]) // 90 deg
+  if (rot === 2) coords = coords.map(([x, y, z]) => [x, -y, -z]) // 180 deg
+  if (rot === 3) coords = coords.map(([x, y, z]) => [x, -z,  y]) // 270 deg
+  /* eslint-enable array-bracket-spacing, no-multi-spaces */
+  return coords
 }
 
-function overlap (a, b) {
+function expandOrigins (scanners) {
+  const out = []
+  for (let i = 0; i < scanners.length; i++) {
+    const [ax, ay, az] = scanners[i]
+    out.push([
+      [ax, ay, az],
+      scanners.map(([x, y, z]) => [x - ax, y - ay, z - az].join(','))
+    ])
+  }
+  return out
+}
+
+function overlapOld (a, b) {
   for (let i = 0; i < a.length; i++) {
     for (let j = 0; j < b.length; j++) {
-      const [ax, ay, az] = a[i]
-      const [bx, by, bz] = b[j]
-      const a2 = a.map(([x, y, z]) => [x - ax, y - ay, z - az].join(','))
-      const b2 = b.map(([x, y, z]) => [x - bx, y - by, z - bz].join(','))
-      const matches = a2.filter(coord => b2.includes(coord))
-      if (matches.length >= 12) {
-        return [b.map(([x, y, z]) => [x + ax - bx, y + ay - by, z + az - bz]), [ax - bx, ay - by, az - bz]]
+      const [[ax, ay, az], a2] = a[i]
+      const [[bx, by, bz], b2] = b[j]
+      let matches = 0
+      for (const coord of a2) {
+        if (b2.includes(coord)) matches++
+        if (matches >= 12) {
+          return [ax - bx, ay - by, az - bz]
+        }
       }
     }
   }
 }
 
 function part1 (input) {
-  input = parseInput(input)
-  let keys = Object.keys(input)
-  const beaconSet = new Set(input[keys[0]].map(coord => coord.join(',')))
-  keys = new Set(keys.slice(1))
-  for (const key of keys) {
-    const rotSet = []
+  const scanners = parseInput(input)
+  const rotations = scanners.map(scanner => {
+    const out = []
     for (let i = 0; i < 24; i++) {
-      rotSet.push(rotFlip(input[key], i))
+      out.push(turnRotate(scanner, i))
     }
-    input[key] = rotSet
-  }
-  while (keys.size !== 0) {
-    let beacons = [...beaconSet].map(coord => coord.split(',').map(i => parseInt(i)))
-    for (const key of keys) {
-      for (let i = 0; i < 24; i++) {
-        const result = overlap(beacons, input[key][i])
-        if (result != null) {
-          result[0].map(coord => beaconSet.add(coord.join(',')))
-          beacons = [...beaconSet].map(coord => coord.split(',').map(i => parseInt(i)))
-          keys.delete(key)
-          console.log(keys.size)
-          break
+    return out
+  })
+  const eOrigins = [expandOrigins(scanners[0])]
+  const related = Array(scanners.length).fill()
+  related[0] = [0, 0, 0]
+  const unrelated = Array(scanners.length).fill().map((_, i) => [i])
+  while (!related.every(i => i != null)) {
+    for (const [i, translate] of related.entries()) {
+      if (translate == null) continue
+      const [tx, ty, tz] = translate
+      for (let j = 0; j < scanners.length; j++) {
+        if (unrelated[i].includes(j)) continue
+        for (let k = 0; k < 24; k++) {
+          const transform = rotations[j][k]
+          const eOrigin = expandOrigins(transform)
+          const translate2 = overlapOld(eOrigins[i], eOrigin)
+          // const translate2 = overlap(scanners[i], transform)
+          if (translate2 != null) {
+            const [tx2, ty2, tz2] = translate2
+            scanners[j] = transform
+            eOrigins[j] = eOrigin
+            related[j] = [tx + tx2, ty + ty2, tz + tz2]
+            break
+          }
         }
+        unrelated[i].push(j)
       }
     }
   }
-  return beaconSet.size
+  const beacons = new Set(scanners[0].map(coord => coord.join(',')))
+  for (const [index, [tx, ty, tz]] of related.entries()) {
+    for (const [x, y, z] of scanners[index]) {
+      beacons.add([x + tx, y + ty, z + tz].join(','))
+    }
+  }
+  return beacons.size
 }
 
 function part2 (input) {
-  input = parseInput(input)
-  let keys = Object.keys(input)
-  const beaconSet = new Set(input[keys[0]].map(coord => coord.join(',')))
-  keys = new Set(keys.slice(1))
-  for (const key of keys) {
-    const rotSet = []
+  const scanners = parseInput(input)
+  const rotations = scanners.map(scanner => {
+    const out = []
     for (let i = 0; i < 24; i++) {
-      rotSet.push(rotFlip(input[key], i))
+      out.push(turnRotate(scanner, i))
     }
-    input[key] = rotSet
-  }
-  const scannerLocs = [[0, 0, 0]]
-  while (keys.size !== 0) {
-    let beacons = [...beaconSet].map(coord => coord.split(',').map(i => parseInt(i)))
-    for (const key of keys) {
-      for (let i = 0; i < 24; i++) {
-        const result = overlap(beacons, input[key][i])
-        if (result != null) {
-          result[0].map(coord => beaconSet.add(coord.join(',')))
-          scannerLocs.push(result[1])
-          beacons = [...beaconSet].map(coord => coord.split(',').map(i => parseInt(i)))
-          keys.delete(key)
-          console.log(keys.size)
-          break
+    return out
+  })
+  const eOrigins = [expandOrigins(scanners[0])]
+  const related = Array(scanners.length).fill()
+  related[0] = [0, 0, 0]
+  const unrelated = Array(scanners.length).fill().map((_, i) => [i])
+  while (!related.every(i => i != null)) {
+    for (const [i, translate] of related.entries()) {
+      if (translate == null) continue
+      const [tx, ty, tz] = translate
+      for (let j = 0; j < scanners.length; j++) {
+        if (unrelated[i].includes(j)) continue
+        for (let k = 0; k < 24; k++) {
+          const transform = rotations[j][k]
+          const eOrigin = expandOrigins(transform)
+          const translate2 = overlapOld(eOrigins[i], eOrigin)
+          // const translate2 = overlap(scanners[i], transform)
+          if (translate2 != null) {
+            const [tx2, ty2, tz2] = translate2
+            scanners[j] = transform
+            eOrigins[j] = eOrigin
+            related[j] = [tx + tx2, ty + ty2, tz + tz2]
+            break
+          }
         }
+        unrelated[i].push(j)
       }
     }
   }
+  const relTo0arr = [...related.values()]
   const distances = []
-  for (let i = 0; i < scannerLocs.length - 1; i++) {
-    for (let j = i + 1; j < scannerLocs.length; j++) {
-      const [ax, ay, az] = scannerLocs[i]
-      const [bx, by, bz] = scannerLocs[j]
+  for (const [index, [ax, ay, az]] of relTo0arr.slice(0, -1).entries()) {
+    for (const [bx, by, bz] of relTo0arr.slice(index + 1)) {
       distances.push(Math.abs(ax - bx) + Math.abs(ay - by) + Math.abs(az - bz))
     }
   }

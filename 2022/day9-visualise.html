@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="../helpers/visualise.js"></script>
+</head>
+
+<body><script>
+  const data = `R 39
+D 39
+L 39
+U 39
+R 20
+D 39
+L 20
+U 20
+R 39
+L 30
+U 12
+D 12
+R 2
+L 1
+U 12
+D 12
+R 15
+U 12
+D 12
+R 2
+L 1
+U 12
+D 12
+R 6
+U 10
+D 10
+R 2
+L 1
+U 10
+D 10
+R 6
+D 20
+L 34
+U 12
+D 12
+R 2
+L 1
+U 12
+D 12
+R 7
+U 12
+D 12
+R 2
+L 1
+U 12
+D 12
+R 14
+U 12
+D 12
+R 2
+L 1
+U 12
+D 12
+U 5
+R 8
+L 14
+R 6
+D 2
+U 1
+R 8
+L 14`
+  const input = data.split('\n').map(i => {
+    i = i.split(' ')
+    return [i[0], parseInt(i[1])]
+  })
+  let x, y, minx, miny, maxx, maxy
+  x = y = minx = miny = maxx = maxy = 0
+  for (let [dir, dist] of input) {
+    const [dx, dy] = { U: [0, -1], D: [0, 1], R: [1, 0], L: [-1, 0] }[dir]
+    x += dx * dist
+    y += dy * dist
+    minx = Math.min(minx, x)
+    miny = Math.min(miny, y)
+    maxx = Math.max(maxx, x)
+    maxy = Math.max(maxy, y)
+  }
+  minx -= 5
+  miny -= 5
+  maxx += 5
+  maxy += 5
+  const scale = 8
+  const size = (Math.max(maxx - minx, maxy - miny) * scale)
+  const canvas = document.createElement('canvas')
+  canvas.style.imageRendering = 'pixelated'
+  canvas.width = canvas.height = size
+  document.body.appendChild(canvas)
+  const ctx = canvas.getContext('2d')
+  const recorder = new FrameByFrameCanvasRecorder(canvas, 60)
+
+
+
+  const visited = [[-minx, -miny]]
+  function drawBG () {
+    ctx.clearRect(0, 0, size, size)
+    
+    for (let y = 0; y < size; y++) {
+      for (let x = 0; x < size; x++) {
+        if ((x + y) % 2 === 0) ctx.fillStyle = '#444'
+        else ctx.fillStyle = '#333'
+        ctx.fillRect(x * scale, y * scale, scale, scale)
+      }
+    }
+    for (let [index, [x, y]] of visited.entries()) {
+      let hue = Math.floor((index / visited.length) * 350)
+      ctx.fillStyle = `hsl(${hue}, 80%, 65%)`
+      ctx.fillRect(x * scale, y * scale, scale, scale)
+    }
+  }
+
+  const frameSkip = 1
+  let frame = 0
+
+  async function draw () {
+    await wait(500)
+    drawBG()
+    await recorder.recordFrame()
+  
+    const ropes = new Array(2).fill().map(() => [0, 0])
+    for (const [dir, dist] of input) {
+      const [dx, dy] = { U: [0, -1], D: [0, 1], R: [1, 0], L: [-1, 0] }[dir]
+      for (let i = 0; i < dist; i++) {
+        
+        ropes[0][0] += dx
+        ropes[0][1] += dy
+        for (let j = 1; j < 2; j++) {
+          const [ax, ay] = ropes[j]
+          const [bx, by] = ropes[j - 1]
+          if (ax < bx - 1 || ax > bx + 1) {
+            if (ay === by - 1 || ay === by + 1) ropes[j][1] = by
+            ropes[j][0] += (bx - ax) / 2
+          }
+          if (ay < by - 1 || ay > by + 1) {
+            if (ax === bx - 1 || ax === bx + 1) ropes[j][0] = bx
+            ropes[j][1] += (by - ay) / 2
+          }
+        }
+        if (ropes[1][0] - minx !== visited.at(-1)[0] || ropes[1][1] - miny !== visited.at(-1)[1]) {
+          visited.push([ropes[1][0] - minx, ropes[1][1] - miny])
+        }
+        if (frame % frameSkip === 0) {
+            drawBG()
+            ctx.fillStyle = '#fff'
+            for (let [x, y] of ropes) {
+              ctx.fillRect((x - minx) * scale, (y - miny) * scale, scale, scale)
+            }
+            await recorder.recordFrame()
+          }
+          frame++
+      }
+    }
+
+    const video = document.createElement('video')
+    document.body.appendChild(video)
+    const recorded = await recorder.export()
+    video.src = URL.createObjectURL(recorded)
+    video.onloadedmetadata = (evt) => video.currentTime = 1e100
+    download(video.src, 'movie.webm')
+  }
+  draw()
+</script></body>
+
+</html>
