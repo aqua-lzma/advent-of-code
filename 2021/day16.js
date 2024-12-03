@@ -1,4 +1,4 @@
-import { log, getInput } from '../helpers.js'
+import { log, getInput } from '../helpers/aoc.js'
 
 const input = await getInput(2021, 16)
 const ex1 = 'D2FE28'

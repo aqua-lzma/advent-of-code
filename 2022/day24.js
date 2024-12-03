@@ -1,17 +1,19 @@
-import { log, getInput } from '../helpers.js'
+import { log, getInput } from '../helpers/aoc.js'
 
-const input = await getInput(2015, 1)
-const ex1 = ``
+const input = await getInput(2022, 24)
+const ex1 = `
+`
 
-function parseInput (input) {
+function parseInput(input) {
   return input.split('\n')
+    .map(i => i)
 }
 
-function part1 (input) {
+function part1(input) {
   input = parseInput(input)
 }
 
-function part2 (input) {
+function part2(input) {
   input = parseInput(input)
 }
 

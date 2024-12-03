@@ -1,4 +1,4 @@
-import { log, getInput } from '../helpers.js'
+import { log, getInput } from '../helpers/aoc.js'
 
 let input = await getInput(2021, 11)
 let ex1 = `5483143223

@@ -1,4 +1,4 @@
-import { log, getInput } from '../helpers.js'
+import { log, getInput } from '../helpers/aoc.js'
 
 const input = await getInput(2021, 17)
 const ex1 = 'target area: x=20..30, y=-10..-5'

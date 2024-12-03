@@ -1,4 +1,4 @@
-import { log, getInput } from '../helpers.js'
+import { log, getInput } from '../helpers/aoc.js'
 
 const input = await getInput(2021, 5)
 const ex1 = `0,9 -> 5,9
