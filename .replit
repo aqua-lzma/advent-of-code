@@ -1,0 +1,5 @@
+modules = ["nodejs-20", "web"]
+run = "node 2024/day3.js"
+
+[nix]
+channel = "stable-24_05"
