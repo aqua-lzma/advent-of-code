@@ -22,7 +22,7 @@ function part2 (input) {
   input = parseInput(input)
   let enabled = true
   let sum = 0
-  const regex = /mul\((\d{1,3}),(\d{1,3})\)|do\(\)|don't\(\)/g
+  const regex = /mul\((\d{1,3}),(\d{1,3})\)|do(n't)?\(\)/g
   for (const [match, a, b] of input.matchAll(regex)) {
     if (match === 'do()') { enabled = true; continue }
     if (match === "don't()") { enabled = false; continue }
