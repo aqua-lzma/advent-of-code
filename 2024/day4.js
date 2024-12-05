@@ -28,11 +28,7 @@ function part1 (input) {
             for (let k = 0; k < 4; k++) {
               const x2 = x + (dx * k)
               const y2 = y + (dy * k)
-              if (
-                x2 < 0 || x2 >= input[y].length ||
-                y2 < 0 || y2 >= input.length ||
-                input[y2][x2] !== 'XMAS'[k]
-              ) break valid
+              if (input[y2]?.[x2] !== 'XMAS'[k]) break valid
             }
             count++
           }
