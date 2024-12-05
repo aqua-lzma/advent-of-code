@@ -44,16 +44,16 @@ function parseInput (input) {
 function isValid (map, update) {
   for (let i = 0; i < update.length - 1; i++) {
     const set = map[update[i]] ?? new Set()
-    if (!set.has(update[i + 1])) return i
+    if (!set.has(update[i + 1])) return false
   }
-  return -1
+  return true
 }
 
 function part1 (input) {
   const [map, updates] = parseInput(input)
   let out = 0
   for (const update of updates) {
-    if (isValid(map, update) === -1) {
+    if (isValid(map, update)) {
       out += parseInt(update[Math.floor(update.length / 2)])
     }
   }
@@ -64,20 +64,17 @@ function part2 (input) {
   const [map, updates] = parseInput(input)
   let out = 0
   for (const update of updates) {
-    let valid = isValid(map, update)
-    if (valid === -1) continue
-    while (valid !== -1) {
-      const temp = update[valid]
-      update[valid] = update[valid + 1]
-      update[valid + 1] = temp
-      valid = isValid(map, update)
-    }
+    if (isValid(map, update)) continue
+    update.sort((a, b) => {
+      const set = map[a] ?? new Set()
+      return set.has(b) ? 1 : -1
+    })
     out += parseInt(update[Math.floor(update.length / 2)])
   }
   return out
 }
 
 log('Part 1 example', part1, [ex1], 143)
-log('Part 1 input', part1, [input], 4462)
+log('Part 1 input', part1, [input])
 log('Part 2 example', part2, [ex1], 123)
-log('Part 2 input', part2, [input], 6767)
+log('Part 2 input', part2, [input])
