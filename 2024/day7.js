@@ -22,13 +22,8 @@ function parseInput (input) {
 
 function part1 (input) {
   input = parseInput(input)
-  const numbers = []
-  const unique = new Set()
-
   let out = 0
   for (const { target, nums } of input) {
-    numbers.push(...nums)
-    nums.map(i => unique.add(i))
     for (let i = 0; i < 2 ** (nums.length - 1); i++) {
       let n = nums[0]
       for (let j = 0; j < nums.length - 1; j++) {
