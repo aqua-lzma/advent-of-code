@@ -24,14 +24,21 @@ function part1 (input) {
   input = parseInput(input)
   let out = 0
   for (const { target, nums } of input) {
-    for (let i = 0; i < 2 ** (nums.length - 1); i++) {
-      let n = nums[0]
-      for (let j = 0; j < nums.length - 1; j++) {
-        if (i & (1 << j)) n += nums[j + 1]
-        else n *= nums[j + 1]
-        if (n > target) break
+    const stack = [nums]
+    while (stack.length > 0) {
+      const nums = stack.pop()
+      if (nums[0] > target) continue
+      const a = nums[0] * nums[1]
+      const b = nums[0] + nums[1]
+      if (nums.length === 2) {
+        if (a === target || b === target) {
+          out += target
+          break
+        }
+      } else {
+        stack.push([a, ...nums.slice(2)])
+        stack.push([b, ...nums.slice(2)])
       }
-      if (target === n) { out += target; break }
     }
   }
   return out
@@ -41,20 +48,23 @@ function part2 (input) {
   input = parseInput(input)
   let out = 0
   for (const { target, nums } of input) {
-    for (let i = 0; i < 3 ** (nums.length - 1); i++) {
-      let n = nums[0]
-      for (let j = 0; j < nums.length - 1; j++) {
-        const k = Math.floor(i / (3 ** j)) % 3
-        if (k === 0) {
-          n = n + nums[j + 1]
-        } else if (k === 1) {
-          n = n * nums[j + 1]
-        } else {
-          n = parseInt(String(n) + String(nums[j + 1]))
+    const stack = [nums]
+    while (stack.length > 0) {
+      const nums = stack.pop()
+      if (nums[0] > target) continue
+      const a = nums[0] + nums[1]
+      const b = parseInt(String(nums[0]) + String(nums[1]))
+      const c = nums[0] * nums[1]
+      if (nums.length === 2) {
+        if (a === target || b === target || c === target) {
+          out += target
+          break
         }
-        if (n > target) break
+      } else {
+        stack.push([a, ...nums.slice(2)])
+        stack.push([b, ...nums.slice(2)])
+        stack.push([c, ...nums.slice(2)])
       }
-      if (target === n) { out += target; break }
     }
   }
   return out
