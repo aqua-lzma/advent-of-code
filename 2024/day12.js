@@ -33,44 +33,67 @@ ABBAAA
 AAAAAA`
 
 function parseInput (input) {
-  return input.split('\n').map(i => Array.from(i))
+  return input.split('\n').map(line => Array.from(line))
 }
 
-const dirs = [[0, 1], [1, 0], [0, -1], [-1, 0]]
-
-function part1 (input) {
-  input = parseInput(input)
-  let out = 0
+function getRegions (input) {
+  const regions = []
   const seen = new Set()
   for (let y = 0; y < input.length; y++) {
-    for (let x = 0; x < input.length; x++) {
+    for (let x = 0; x < input[0].length; x++) {
       if (seen.has(`${x},${y}`)) continue
       const char = input[y][x]
       const area = new Set([`${x},${y}`])
       const stack = [[x, y]]
+      let perim = 0
+      const [min, max] = [{ x, y }, { x, y }]
       while (stack.length > 0) {
         const [x, y] = stack.pop()
-        for (const [dx, dy] of dirs) {
+        perim += 4
+        for (const [dx, dy] of [[0, 1], [1, 0], [0, -1], [-1, 0]]) {
           const [x2, y2] = [x + dx, y + dy]
-          if (input[y2]?.[x2] == null) continue
-          if (input[y2][x2] !== char) continue
+          if (input[y2]?.[x2] !== char) continue
+          perim--
           if (!area.has(`${x2},${y2}`)) {
             area.add(`${x2},${y2}`)
             seen.add(`${x2},${y2}`)
             stack.push([x2, y2])
+            min.x = Math.min(min.x, x2)
+            min.y = Math.min(min.y, y2)
+            max.x = Math.max(max.x, x2)
+            max.y = Math.max(max.y, y2)
           }
         }
       }
-      let perm = 0
-      for (const xy of area) {
-        perm += 4
-        const [x, y] = xy.split(',').map(i => parseInt(i))
-        for (const [dx, dy] of dirs) {
-          const [x2, y2] = [x + dx, y + dy]
-          if (area.has(`${x2},${y2}`)) perm -= 1
-        }
-      }
-      out += area.size * perm
+      regions.push({ area, perim, min, max })
+    }
+  }
+  return regions
+}
+
+function part1 (input) {
+  input = parseInput(input)
+  let out = 0
+  for (const { area, perim } of getRegions(input)) {
+    out += area.size * perim
+  }
+  return out
+}
+
+function countSides (area, loop1, loop2, transform) {
+  let out = 0
+  for (let i = loop1[0]; i < loop1[1]; i++) {
+    let [inner, outer] = [false, false]
+    for (let j = loop2[0]; j < loop2[1]; j++) {
+      const [a, b] = transform(i, j)
+      if (area.has(a) && !area.has(b)) {
+        if (!inner) out++
+        inner = true
+      } else inner = false
+      if (!area.has(a) && area.has(b)) {
+        if (!outer) out++
+        outer = true
+      } else outer = false
     }
   }
   return out
@@ -79,72 +102,22 @@ function part1 (input) {
 function part2 (input) {
   input = parseInput(input)
   let out = 0
-  const seen = new Set()
-  for (let y = 0; y < input.length; y++) {
-    for (let x = 0; x < input.length; x++) {
-      if (seen.has(`${x},${y}`)) continue
-      const char = input[y][x]
-      const area = new Set([`${x},${y}`])
-      const stack = [[x, y]]
-      let [minx, miny, maxx, maxy] = [x, y, x, y]
-      while (stack.length > 0) {
-        const [x, y] = stack.pop()
-        for (const [dx, dy] of dirs) {
-          const [x2, y2] = [x + dx, y + dy]
-          if (input[y2]?.[x2] == null) continue
-          if (input[y2][x2] !== char) continue
-          if (!area.has(`${x2},${y2}`)) {
-            area.add(`${x2},${y2}`)
-            seen.add(`${x2},${y2}`)
-            stack.push([x2, y2])
-            minx = Math.min(minx, x2)
-            miny = Math.min(miny, y2)
-            maxx = Math.max(maxx, x2)
-            maxy = Math.max(maxy, y2)
-          }
-        }
-      }
-      let horizontal = 0
-      for (let y = miny - 1; y <= maxy; y++) {
-        let edgeA = false
-        let edgeB = false
-        for (let x = minx; x <= maxx; x++) {
-          const a = `${x},${y}`
-          const b = `${x},${y + 1}`
-          if (area.has(a) && !area.has(b)) {
-            if (!edgeA) horizontal++
-            edgeA = true
-          } else edgeA = false
-          if (area.has(b) && !area.has(a)) {
-            if (!edgeB) horizontal++
-            edgeB = true
-          } else edgeB = false
-        }
-      }
-      let vertical = 0
-      for (let x = minx - 1; x <= maxx; x++) {
-        let edgeA = false
-        let edgeB = false
-        for (let y = miny; y <= maxy; y++) {
-          const a = `${x},${y}`
-          const b = `${x + 1},${y}`
-          if (
-            (area.has(a) && !area.has(b))
-          ) {
-            if (!edgeA) vertical++
-            edgeA = true
-          } else edgeA = false
-          if (
-            (area.has(b) && !area.has(a))
-          ) {
-            if (!edgeB) vertical++
-            edgeB = true
-          } else edgeB = false
-        }
-      }
-      // console.log(char, area.size, horizontal + vertical)
-      out += area.size * (horizontal + vertical)
-    }
+  for (const { area, min, max } of getRegions(input)) {
+    const horizontal = countSides(
+      area,
+      [min.y - 1, max.y + 2], // Outer loop  (for y)
+      [min.x, max.x + 1], // Inner loop (for x)
+      // Compare with coord below
+      (y, x) => ([`${x},${y}`, `${x},${y + 1}`])
+    )
+    const vertical = countSides(
+      area,
+      [min.x - 1, max.x + 2], // Outer loop (for x)
+      [min.y, max.y + 1], // Inner loop (for y)
+      // Compare with coord to the right
+      (x, y) => ([`${x},${y}`, `${x + 1},${y}`])
+    )
+    out += area.size * (horizontal + vertical)
   }
   return out
 }
