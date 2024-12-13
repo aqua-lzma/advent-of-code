@@ -10,6 +10,8 @@ const ex1 = `89010123
 01329801
 10456732`
 
+const dirs = [[0, 1], [1, 0], [0, -1], [-1, 0]]
+
 function parseInput (input) {
   return input.split('\n')
     .map(line => line.split('')
@@ -22,22 +24,20 @@ function part1 (input) {
   for (let y = 0; y < input.length; y++) {
     for (let x = 0; x < input[0].length; x++) {
       if (input[y][x] === 0) {
-        let count = 0
         const stack = [[x, y]]
         const seen = new Set()
         while (stack.length > 0) {
           const [x, y] = stack.pop()
           if (seen.has(`${x},${y}`)) continue
           seen.add(`${x},${y}`)
-          if (input[y][x] === 9) { count++; continue }
-          for (const [dx, dy] of [[0, 1], [1, 0], [0, -1], [-1, 0]]) {
+          if (input[y][x] === 9) { out++; continue }
+          for (const [dx, dy] of dirs) {
             const [x2, y2] = [x + dx, y + dy]
             if (input[y2]?.[x2] == null) continue
             if (input[y2][x2] !== input[y][x] + 1) continue
             stack.push([x2, y2])
           }
         }
-        out += count
       }
     }
   }
@@ -54,7 +54,7 @@ function part2 (input) {
         while (stack.length > 0) {
           const [x, y] = stack.pop()
           if (input[y][x] === 9) { out++; continue }
-          for (const [dx, dy] of [[0, 1], [1, 0], [0, -1], [-1, 0]]) {
+          for (const [dx, dy] of dirs) {
             const [x2, y2] = [x + dx, y + dy]
             if (input[y2]?.[x2] == null) continue
             if (input[y2][x2] !== input[y][x] + 1) continue
