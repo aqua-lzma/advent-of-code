@@ -17,12 +17,12 @@ Button A: X+69, Y+23
 Button B: X+27, Y+71
 Prize: X=18641, Y=10279`
 
-const regex = /Button A: X\+(\d+), Y\+(\d+)\nButton B: X\+(\d+), Y\+(\d+)\nPrize: X=(\d+), Y=(\d+)/
+const regex = new RegExp(Array(6).fill('(\\d+)').join('[^\\d]+'))
 
 function parseInput (input) {
-  return input.split('\n\n').map(block => {
-    return regex.exec(block).slice(1).map(i => parseInt(i))
-  })
+  return input.split('\n\n').map(block =>
+    regex.exec(block).slice(1).map(i => parseInt(i))
+  )
 }
 
 function solve (ax, ay, bx, by, cx, cy) {
