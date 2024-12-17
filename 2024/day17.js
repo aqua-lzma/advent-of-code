@@ -48,14 +48,14 @@ function run (prog, a) {
     const op = prog[index]
     const operand = prog[index + 1]
     if (op === 0) a = Math.floor(a / (2 ** combo(operand))) // adv
-    if (op === 1) b = xor(b, operand) // bxl
-    if (op === 2) b = combo(operand) % 8 // bst
-    if (op === 3 && a !== 0) index = operand
-    else index += 2
-    if (op === 4) b = xor(b, c) // bxc
-    if (op === 5) out.push(combo(operand) % 8) // out
     if (op === 6) b = Math.floor(a / (2 ** combo(operand))) // bdv
     if (op === 7) c = Math.floor(a / (2 ** combo(operand))) // cdv
+    if (op === 1) b = xor(b, operand) // bxl
+    if (op === 2) b = combo(operand) % 8 // bst
+    if (op === 4) b = xor(b, c) // bxc
+    if (op === 5) out.push(combo(operand) % 8) // out
+    if (op === 3 && a !== 0) index = operand
+    else index += 2
   }
   return out
 }
@@ -79,7 +79,7 @@ function part2 (input) {
   return a
 }
 
-log('Part 1 example', part1, [ex1])
+log('Part 1 example', part1, [ex1], '4,6,3,5,6,3,5,2,1,0')
 log('Part 1 input', part1, [input])
-log('Part 2 example', part2, [ex2])
+log('Part 2 example', part2, [ex2], 117440)
 log('Part 2 input', part2, [input])
