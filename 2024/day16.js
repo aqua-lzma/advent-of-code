@@ -58,8 +58,9 @@ function dijkstras (grid, start, end) {
   let paths = new Set()
   const queue = new PriorityQueue((a, b) => a.score < b.score)
   queue.push({ pos: start, dir: 0, score: 0, path: [`${start.x},${start.y}`] })
-  while (queue.size() > 0) {
+  while (queue.size > 0) {
     const { pos, dir, score, path } = queue.pop()
+    if (score > best) continue
     if (pos.x === end.x && pos.y === end.y && score <= best) {
       best = score
       paths = paths.union(new Set(path))

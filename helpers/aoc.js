@@ -91,7 +91,7 @@ export class PriorityQueue {
     this._comparator = comparator
   }
 
-  size () {
+  get size () {
     return this._heap.length
   }
 
@@ -104,12 +104,12 @@ export class PriorityQueue {
       this._heap.push(value)
       this._siftUp()
     })
-    return this.size()
+    return this.size
   }
 
   pop () {
     const poppedValue = this.peek()
-    const bottom = this.size() - 1
+    const bottom = this.size - 1
     if (bottom > 0) {
       this._swap(0, bottom)
     }
@@ -139,7 +139,7 @@ export class PriorityQueue {
   }
 
   _siftUp () {
-    let node = this.size() - 1
+    let node = this.size - 1
     while (node > 0 && this._greater(node, this._parent(node))) {
       this._swap(node, this._parent(node))
       node = this._parent(node)
@@ -149,11 +149,11 @@ export class PriorityQueue {
   _siftDown () {
     let node = 0
     while (
-      (this._left(node) < this.size() && this._greater(this._left(node), node)) ||
-      (this._right(node) < this.size() && this._greater(this._right(node), node))
+      (this._left(node) < this.size && this._greater(this._left(node), node)) ||
+      (this._right(node) < this.size && this._greater(this._right(node), node))
     ) {
       const maxChild = (
-        this._right(node) < this.size() &&
+        this._right(node) < this.size &&
         this._greater(this._right(node), this._left(node))
       )
         ? this._right(node)
@@ -161,6 +161,33 @@ export class PriorityQueue {
       this._swap(node, maxChild)
       node = maxChild
     }
+  }
+}
+
+export class Vec2 {
+  static #registry = new Map()
+
+  constructor (x, y) {
+    const key = `${x},${y}`
+    const mem = Vec2.#registry.get(key)
+    if (mem != null) return mem
+    this.x = x
+    this.y = y
+    Vec2.#registry.set(key, this)
+  }
+
+  // Method to add two coordinates
+  add (other) {
+    if (!(other instanceof Vec2)) {
+      throw new TypeError(`Cannot add ${typeof other} to Vec2`)
+    }
+    return new Vec2(this.x + other.x, this.y + other.y)
+  }
+
+  [Symbol.toPrimitive] (hint) {
+    if (hint === 'number') return NaN
+    // Default string representation
+    return `(${this.x}, ${this.y})`
   }
 }
 
