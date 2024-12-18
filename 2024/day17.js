@@ -59,8 +59,8 @@ function part2 (input) {
   for (let i = 1; i <= prog.length; i++) {
     a <<= 3n
     let out = run(prog, a)
-    const cmp = prog.slice(-i)
-    while (out.join(',') !== cmp.join(',')) {
+    const cmp = prog.slice(-i).join(',')
+    while (out.join(',') !== cmp) {
       out = run(prog, ++a)
     }
   }
