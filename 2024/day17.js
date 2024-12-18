@@ -56,10 +56,10 @@ function part1 (input) {
 function part2 (input) {
   const { prog } = parseInput(input)
   let a = 0n
-  for (let i = 0; i < prog.length; i++) {
+  for (let i = 1; i <= prog.length; i++) {
     a <<= 3n
     let out = run(prog, a)
-    const cmp = prog.slice(-i - 1)
+    const cmp = prog.slice(-i)
     while (out.join(',') !== cmp.join(',')) {
       out = run(prog, ++a)
     }
