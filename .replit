@@ -1,5 +1,8 @@
 modules = ["nodejs-20", "web"]
-run = "node 2024/day3.js"
+run = "node 2024/day5.js"
 
 [nix]
 channel = "stable-24_05"
+
+[agent]
+expertMode = true
