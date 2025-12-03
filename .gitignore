@@ -3,3 +3,4 @@ package-lock.json
 .vscode
 session-cookie.txt
 inputs/*
+.replit
