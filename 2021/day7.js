@@ -1,16 +1,16 @@
 const fs = require('fs')
-let input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
-let bigboy = fs.readFileSync(__dirname + '/bigboy.txt', 'utf8')
+const input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
+const bigboy = fs.readFileSync(__dirname + '/bigboy.txt', 'utf8')
 
-let ex1 = `16,1,2,0,4,2,7,1,2,14`
+const ex1 = '16,1,2,0,4,2,7,1,2,14'
 
 function median (array) {
-  let half = Math.floor(array.length / 2)
+  const half = Math.floor(array.length / 2)
   if (array.length % 2 === 0) {
     return (array[half - 1] + array[half]) / 2
   }
   return array[half]
-} 
+}
 
 function parseInput (input) {
   input = input.split(',').map(i => parseInt(i))
@@ -20,10 +20,10 @@ function parseInput (input) {
 
 function part1Old (input) {
   input = parseInput(input)
-  let max = Math.max(...input)
-  let tests = Array(max).fill(0)
+  const max = Math.max(...input)
+  const tests = Array(max).fill(0)
   for (let i = 0; i < max; i++) {
-    for (let n of input) {
+    for (const n of input) {
       tests[i] += Math.abs(i - n)
     }
   }
@@ -32,9 +32,9 @@ function part1Old (input) {
 
 function part1 (input) {
   input = parseInput(input)
-  let m = median(input)
+  const m = median(input)
   let floor = ceil = 0
-  for (let n of input) {
+  for (const n of input) {
     floor += Math.abs(n - Math.floor(m))
     ceil += Math.abs(n - Math.ceil(m))
   }
@@ -43,12 +43,12 @@ function part1 (input) {
 
 function part2Old (input) {
   input = parseInput(input)
-  let max = Math.max(...input)
-  let tests = Array(max).fill(0)
+  const max = Math.max(...input)
+  const tests = Array(max).fill(0)
   for (let i = 0; i < max; i++) {
-    for (let n of input) {
-      let d = Math.abs(i - n)
-      let sum = (d * (d + 1)) / 2
+    for (const n of input) {
+      const d = Math.abs(i - n)
+      const sum = (d * (d + 1)) / 2
       tests[i] += sum
     }
   }
@@ -57,11 +57,11 @@ function part2Old (input) {
 
 function part2 (input) {
   input = parseInput(input)
-  let mean = input.reduce((sum, cur) => sum + cur) / input.length
+  const mean = input.reduce((sum, cur) => sum + cur) / input.length
   let floor = ceil = 0
-  for (let n of input) {
-    let fd = Math.abs(n - Math.floor(mean))
-    let cd = Math.abs(n - Math.ceil(mean))
+  for (const n of input) {
+    const fd = Math.abs(n - Math.floor(mean))
+    const cd = Math.abs(n - Math.ceil(mean))
     floor += (fd * (fd + 1)) / 2
     ceil += (cd * (cd + 1)) / 2
   }
@@ -73,7 +73,7 @@ function log (name, func, input, expected) {
   let out = func(...input)
   console.timeEnd(name)
   if (expected != null) {
-    let assertion = (typeof expected === 'function')
+    const assertion = (typeof expected === 'function')
       ? expected(out)
       : expected === out
     console.assert(assertion, 'expected:', expected)

@@ -1,8 +1,8 @@
 const fs = require('fs')
-let input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
-let bigboy = fs.readFileSync(__dirname + '/bigboy.txt', 'utf8')
+const input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
+const bigboy = fs.readFileSync(__dirname + '/bigboy.txt', 'utf8')
 
-let ex1 = `2199943210
+const ex1 = `2199943210
 3987894921
 9856789892
 8767896789
@@ -14,17 +14,17 @@ function parseInput (input) {
 
 function part1 (input) {
   input = parseInput(input)
-  let width = input[0].length
-  let height = input.length
-  let risks = []
+  const width = input[0].length
+  const height = input.length
+  const risks = []
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       if (input[y][x] === 9) continue
       if (
-        (y - 1 < 0       || input[y - 1][x] > input[y][x]) &&
+        (y - 1 < 0 || input[y - 1][x] > input[y][x]) &&
         (y + 1 >= height || input[y + 1][x] > input[y][x]) &&
-        (x - 1 < 0       || input[y][x - 1] > input[y][x]) &&
-        (x + 1 >= width  || input[y][x + 1] > input[y][x])
+        (x - 1 < 0 || input[y][x - 1] > input[y][x]) &&
+        (x + 1 >= width || input[y][x + 1] > input[y][x])
       ) {
         risks.push(input[y][x] + 1)
       }
@@ -35,32 +35,32 @@ function part1 (input) {
 
 function part2 (input) {
   input = parseInput(input)
-  let width = input[0].length
-  let height = input.length
-  let size = width * height
-  let filled = new Uint8Array(size)
-  let basins = []
+  const width = input[0].length
+  const height = input.length
+  const size = width * height
+  const filled = new Uint8Array(size)
+  const basins = []
   for (let i = 0; i < size; i++) {
-    let x = i % width
-    let y = ~~(i / width)
+    const x = i % width
+    const y = ~~(i / width)
     if (input[y][x] === 9 || filled[i] === 1) continue
-    let checked = new Set()
-    let toCheck = new Set([i])
+    const checked = new Set()
+    const toCheck = new Set([i])
     while (toCheck.size !== 0) {
-      for (let i of toCheck) {
+      for (const i of toCheck) {
         checked.add(i)
         toCheck.delete(i)
         filled[i]++
-        let x = i % width
-        let y = ~~(i / width)
-        let u = ((y - 1) * width) + (x)
-        let d = ((y + 1) * width) + (x)
-        let l = ((y) * width) + (x - 1)
-        let r = ((y) * width) + (x + 1)
-        if (y - 1 >= 0     && input[y - 1][x] !== 9 && filled[u] !== 1) toCheck.add(u)
+        const x = i % width
+        const y = ~~(i / width)
+        const u = ((y - 1) * width) + (x)
+        const d = ((y + 1) * width) + (x)
+        const l = ((y) * width) + (x - 1)
+        const r = ((y) * width) + (x + 1)
+        if (y - 1 >= 0 && input[y - 1][x] !== 9 && filled[u] !== 1) toCheck.add(u)
         if (y + 1 < height && input[y + 1][x] !== 9 && filled[d] !== 1) toCheck.add(d)
-        if (x - 1 >= 0     && input[y][x - 1] !== 9 && filled[l] !== 1) toCheck.add(l)
-        if (x + 1 < width  && input[y][x + 1] !== 9 && filled[r] !== 1) toCheck.add(r)
+        if (x - 1 >= 0 && input[y][x - 1] !== 9 && filled[l] !== 1) toCheck.add(l)
+        if (x + 1 < width && input[y][x + 1] !== 9 && filled[r] !== 1) toCheck.add(r)
       }
     }
     basins.push(checked.size)
@@ -74,7 +74,7 @@ function log (name, func, input, expected) {
   let out = func(...input)
   console.timeEnd(name)
   if (expected != null) {
-    let assertion = (typeof expected === 'function')
+    const assertion = (typeof expected === 'function')
       ? expected(out)
       : expected === out
     if (!assertion) console.warn('Expected:', expected)

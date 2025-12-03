@@ -1,7 +1,7 @@
 const fs = require('fs')
-let input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
+const input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
 
-let ex1 = `L.LL.LL.LL
+const ex1 = `L.LL.LL.LL
 LLLLLLL.LL
 L.L.L..L..
 LLLL.LL.LL
@@ -26,11 +26,11 @@ function part1 (input) {
         if (input[y][x] === 0) continue
         let neighbours = 0
         for (let i = 0; i < 9; i++) {
-          let dx = (i % 3) - 1
-          let dy = (~~(i / 3)) - 1
+          const dx = (i % 3) - 1
+          const dy = (~~(i / 3)) - 1
           if (dx === 0 && dy === 0) continue
-          let tx = x + dx
-          let ty = y + dy
+          const tx = x + dx
+          const ty = y + dy
           if (tx < 0 || tx >= input[y].length) continue
           if (ty < 0 || ty >= input.length) continue
           if (input[ty][tx] === 2) neighbours++
@@ -54,14 +54,14 @@ function part2 (input) {
         if (input[y][x] === 0) continue
         let neighbours = 0
         for (let i = 0; i < 9; i++) {
-          let dx = (i % 3) - 1
-          let dy = (~~(i / 3)) - 1
+          const dx = (i % 3) - 1
+          const dy = (~~(i / 3)) - 1
           if (dx === 0 && dy === 0) continue
           let tx = x + dx
           let ty = y + dy
           while (
-            tx >= 0 && tx < input[y].length
-            && ty >= 0 && ty < input.length
+            tx >= 0 && tx < input[y].length &&
+            ty >= 0 && ty < input.length
           ) {
             if (input[ty][tx] === 1) break
             if (input[ty][tx] === 2) {
@@ -86,7 +86,7 @@ function log (name, func, input, expected) {
   let out = func(...input)
   console.timeEnd(name)
   if (expected != null) {
-    let assertion = (typeof expected === 'function')
+    const assertion = (typeof expected === 'function')
       ? expected(out)
       : expected === out
     console.assert(assertion, 'expected:', expected)

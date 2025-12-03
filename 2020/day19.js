@@ -1,7 +1,7 @@
 const fs = require('fs')
-let input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
+const input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
 
-let ex1 = `0: 4 1 5
+const ex1 = `0: 4 1 5
 1: 2 3 | 3 2
 2: 4 4 | 5 5
 3: 4 5 | 5 4
@@ -14,7 +14,7 @@ abbbab
 aaabbb
 aaaabbb`
 
-let ex2 = `42: 9 14 | 10 1
+const ex2 = `42: 9 14 | 10 1
 9: 14 27 | 1 26
 10: 23 14 | 28 1
 1: "a"
@@ -74,13 +74,13 @@ function part1 (input) {
 
   function buildRule (rule) {
     if ('ab'.includes(rule)) return rule
-    let groups = rule.map(group => {
-      let subRules = group.map(num => buildRule(rules[num]))
+    const groups = rule.map(group => {
+      const subRules = group.map(num => buildRule(rules[num]))
       return `(${subRules.join(')(')})`
     })
     return `(${groups.join(')|(')})`
   }
-  let regex = new RegExp(`^${buildRule(rules[0])}$`)
+  const regex = new RegExp(`^${buildRule(rules[0])}$`)
   return messages.filter(message => regex.test(message)).length
 }
 
@@ -96,15 +96,15 @@ function part2 (input) {
 
   function buildRule (rule) {
     if ('ab'.includes(rule)) return rule
-    let groups = rule.map(group => {
-      let subRules = group.map(num => buildRule(rules[num]))
+    const groups = rule.map(group => {
+      const subRules = group.map(num => buildRule(rules[num]))
       return `(${subRules.join(')(')})`
     })
     return `(${groups.join(')|(')})`
   }
-  
-  let r42 = new RegExp(`^(${buildRule(rules[42])})`)
-  let r31 = new RegExp(`(${buildRule(rules[31])})$`)
+
+  const r42 = new RegExp(`^(${buildRule(rules[42])})`)
+  const r31 = new RegExp(`(${buildRule(rules[31])})$`)
   let matches = 0
   for (let message of messages) {
     let r42s = 0
@@ -122,8 +122,8 @@ function part2 (input) {
   return matches
 }
 
-let p1ex1 = part1(ex1)
-let p2ex2 = part2(ex2)
+const p1ex1 = part1(ex1)
+const p2ex2 = part2(ex2)
 console.assert(p1ex1 === 2, 'Part 1 example', p1ex1)
 console.log('Part 1 input:', part1(input))
 console.assert(p2ex2 === 12, 'Part 2 example 2', p2ex2)

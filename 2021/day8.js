@@ -1,7 +1,7 @@
 const fs = require('fs')
-let input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
+const input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
 
-let ex1 = `be cfbegad cbdgef fgaecd cgeb fdcge agebfd fecdb fabcd edb | fdgacbe cefdb cefbgd gcbe
+const ex1 = `be cfbegad cbdgef fgaecd cgeb fdcge agebfd fecdb fabcd edb | fdgacbe cefdb cefbgd gcbe
 edbfga begcd cbg gc gcadebf fbgde acbgfd abcde gfcbed gfec | fcgedb cgb dgebacf gc
 fgaebd cg bdaec gdafb agbcfd gdcbef bgcad gfac gcb cdgabef | cg cg fdcagb cbg
 fbegcd cbd adcefb dageb afcb bc aefdc ecdab fgdeca fcdbega | efabcd cedba gadfec cb
@@ -12,18 +12,18 @@ bdfegc cbegaf gecbf dfcage bdacg ed bedf ced adcbefg gebcd | ed bcgafe cdgba cbg
 egadfb cdbfeg cegd fecab cgb gbdefca cg fgcdab egfdb bfceg | gbdfcae bgc cg cgb
 gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce`
 
-let ex2 = `acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf`
+const ex2 = 'acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf'
 
 function parseInput (input) {
   input = input.split('\n').map(row => row.split(' | ').map(list => list.split(' ').map(signal => signal.split(''))))
   // input = input.split('\n').map(row => row.split(' | ').map(list => list.split(' ')))
   // input = input.split('\n').map(row => row.split(' | ').map(list => list.split(' ').map(signal => signal.split(''))))
 
-  for (let [unique, output] of input) {
-    for (let entry of unique) {
+  for (const [unique, output] of input) {
+    for (const entry of unique) {
       entry.sort()
     }
-    for (let entry of output) {
+    for (const entry of output) {
       entry.sort()
     }
   }
@@ -34,8 +34,8 @@ function parseInput (input) {
 function part1 (input) {
   input = parseInput(input)
   let c = 0
-  for (let [unique, output] of input) {
-    for (let signal of output) {
+  for (const [unique, output] of input) {
+    for (const signal of output) {
       if ([2, 3, 4, 7].includes(signal.length)) c++
     }
   }
@@ -45,7 +45,7 @@ function part1 (input) {
 function part2 (input) {
   input = parseInput(input)
   let sum = 0
-  for (let [unique, output] of input) {
+  for (const [unique, output] of input) {
     let nMap = Array(10).fill()
 
     // Find digits with unique number of segments
@@ -61,9 +61,9 @@ function part2 (input) {
     // Find 6: Unlike 0 and 9, will be missing exactly one segment from 1
     nMap[6] = unique.find(i => i.length === 6 && nMap[1].filter(j => i.includes(j)).length === 1)
     // Top right segment is the one 6 was missing
-    let topRight = nMap[1].filter(c => !nMap[6].includes(c))[0]
+    const topRight = nMap[1].filter(c => !nMap[6].includes(c))[0]
     // Bottom right segment is the segment from 1 that isnt top right
-    let botRight = nMap[1].filter(c => c !== topRight)[0]
+    const botRight = nMap[1].filter(c => c !== topRight)[0]
     // Find 2: unlike 3 and 5, will be missing bottom right segment
     nMap[2] = unique.find(i => i.length === 5 && !i.includes(botRight))
     // Find 5: unlike 2 and 3, will be missing top right segment
@@ -74,11 +74,11 @@ function part2 (input) {
     // Find 0: last unused value
     nMap[0] = unique.find(i => i.length === 6 && !nMap.includes(i.join(''))).join('')
 
-    let map = {}
+    const map = {}
     for (let i = 0; i < 10; i++) {
       map[nMap[i]] = i
     }
-    let value = parseInt(output.map(i => map[i.join('')]).join(''))
+    const value = parseInt(output.map(i => map[i.join('')]).join(''))
     sum += value
   }
   return sum
@@ -89,7 +89,7 @@ function log (name, func, input, expected) {
   let out = func(...input)
   console.timeEnd(name)
   if (expected != null) {
-    let assertion = (typeof expected === 'function')
+    const assertion = (typeof expected === 'function')
       ? expected(out)
       : expected === out
     console.assert(assertion, 'expected:', expected)

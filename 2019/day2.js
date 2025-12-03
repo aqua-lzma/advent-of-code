@@ -3,7 +3,7 @@ import { log, getInput } from '../helpers/aoc.js'
 import intCode from './intcode.js'
 
 const input = await getInput(2019, 2)
-const ex1 = `1,9,10,3,2,3,11,0,99,30,40,50`
+const ex1 = '1,9,10,3,2,3,11,0,99,30,40,50'
 
 function parseInput (input) {
   return input.split(',').map(i => parseInt(i))

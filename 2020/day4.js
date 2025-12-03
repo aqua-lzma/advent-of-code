@@ -1,7 +1,7 @@
 const fs = require('fs')
-let input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
+const input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
 
-let ex1 = `ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
+const ex1 = `ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
 byr:1937 iyr:2017 cid:147 hgt:183cm
 
 iyr:2013 ecl:amb cid:350 eyr:2023 pid:028048884
@@ -15,7 +15,7 @@ hgt:179cm
 hcl:#cfa07d eyr:2025 pid:166559648
 iyr:2011 ecl:brn hgt:59in`
 
-let ex2 = `eyr:1972 cid:100
+const ex2 = `eyr:1972 cid:100
 hcl:#18171d ecl:amb hgt:170 pid:186cm iyr:2018 byr:1926
 
 iyr:2019
@@ -29,7 +29,7 @@ hgt:59cm ecl:zzz
 eyr:2038 hcl:74454a iyr:2023
 pid:3556412378 byr:2007`
 
-let ex3 = `pid:087499704 hgt:74in ecl:grn iyr:2012 eyr:2030 byr:1980
+const ex3 = `pid:087499704 hgt:74in ecl:grn iyr:2012 eyr:2030 byr:1980
 hcl:#623a2f
 
 eyr:2029 ecl:blu cid:129 byr:1989
@@ -56,25 +56,25 @@ function part2 (input) {
   return input.filter(pp => {
     pp = Object.fromEntries(pp)
     return (
-      pp.byr != null && parseInt(pp.byr) >= 1920 && parseInt(pp.byr) <= 2002
-      && pp.iyr != null && parseInt(pp.iyr) >= 2010 && parseInt(pp.iyr) <= 2020
-      && pp.eyr != null && parseInt(pp.eyr) >= 2020 && parseInt(pp.eyr) <= 2030
-      && pp.hgt != null && /^\d+(cm|in)$/.test(pp.hgt) && (
-        (pp.hgt.endsWith('cm') && (parseInt(pp.hgt.replace('cm', '')) >= 150) && (parseInt(pp.hgt.replace('cm', '')) <= 193))
-        || (pp.hgt.endsWith('in') && (parseInt(pp.hgt.replace('in', '')) >= 59) && (parseInt(pp.hgt.replace('in', '')) <= 76))
-      )
-      && pp.hcl != null && /^#[0-9a-f]{6}$/.test(pp.hcl)
-      && pp.ecl != null && ['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth'].includes(pp.ecl)
-      && pp.pid != null && /^\d{9}$/.test(pp.pid)
+      pp.byr != null && parseInt(pp.byr) >= 1920 && parseInt(pp.byr) <= 2002 &&
+      pp.iyr != null && parseInt(pp.iyr) >= 2010 && parseInt(pp.iyr) <= 2020 &&
+      pp.eyr != null && parseInt(pp.eyr) >= 2020 && parseInt(pp.eyr) <= 2030 &&
+      pp.hgt != null && /^\d+(cm|in)$/.test(pp.hgt) && (
+        (pp.hgt.endsWith('cm') && (parseInt(pp.hgt.replace('cm', '')) >= 150) && (parseInt(pp.hgt.replace('cm', '')) <= 193)) ||
+        (pp.hgt.endsWith('in') && (parseInt(pp.hgt.replace('in', '')) >= 59) && (parseInt(pp.hgt.replace('in', '')) <= 76))
+      ) &&
+      pp.hcl != null && /^#[0-9a-f]{6}$/.test(pp.hcl) &&
+      pp.ecl != null && ['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth'].includes(pp.ecl) &&
+      pp.pid != null && /^\d{9}$/.test(pp.pid)
     )
   }).length
 }
 
-let p1ex1 = part1(ex1)
+const p1ex1 = part1(ex1)
 console.assert(p1ex1 === 2, 'Part 1 example', p1ex1)
 console.log('Part 1 input', part1(input))
-let p2ex2 = part2(ex2)
+const p2ex2 = part2(ex2)
 console.assert(p2ex2 === 0, 'Part 2 example 2', p2ex2)
-let p2ex3 = part2(ex3)
+const p2ex3 = part2(ex3)
 console.assert(p2ex3 === 4, 'Part 2 example 3', p2ex3)
 console.log('Part 2 input:', part2(input))

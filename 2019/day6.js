@@ -23,12 +23,12 @@ function parseInput (input) {
 function part1 (input) {
   input = parseInput(input)
   let c = 0
-  let stack = [['COM', 1]]
+  const stack = [['COM', 1]]
   while (stack.length !== 0) {
-    let [node, n] = stack.pop()
-    let children = input.filter(([a, b]) => a === node)
+    const [node, n] = stack.pop()
+    const children = input.filter(([a, b]) => a === node)
     c += children.length * n
-    for (let [a, b] of children) {
+    for (const [a, b] of children) {
       stack.push([b, n + 1])
     }
   }
@@ -39,15 +39,15 @@ function part2 (input) {
   input = parseInput(input)
   const map = new Map(input.map(([a, b]) => [b, a]))
   function buildPath (node) {
-    let path = []
+    const path = []
     while (node !== 'COM') {
       node = map.get(node)
       path.push(node)
     }
     return path.reverse()
   }
-  let a = buildPath('YOU')
-  let b = buildPath('SAN')
+  const a = buildPath('YOU')
+  const b = buildPath('SAN')
   while (a[0] === b[0]) {
     a.shift()
     b.shift()

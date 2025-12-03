@@ -1,10 +1,10 @@
 import { log, getInput } from '../helpers/aoc.js'
 
 const input = await getInput(2019, 1)
-const ex1 = `12`
-const ex2 = `14`
-const ex3 = `1969`
-const ex4 = `100756`
+const ex1 = '12'
+const ex2 = '14'
+const ex3 = '1969'
+const ex4 = '100756'
 
 function parseInput (input) {
   return input.split('\n').map(i => parseInt(i))

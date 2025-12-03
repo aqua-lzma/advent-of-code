@@ -1,7 +1,7 @@
 const fs = require('fs')
-let input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
+const input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
 
-let ex1 = `.#.
+const ex1 = `.#.
 ..#
 ###`
 
@@ -11,15 +11,15 @@ function part1 (input) {
       return [j, col]
     }))]
   }))
-  let size = Object.keys(input).length
-  function read(grid, x, y, z) {
+  const size = Object.keys(input).length
+  function read (grid, x, y, z) {
     if (grid[z] == null) grid[z] = {}
     if (grid[z][y] == null) grid[z][y] = {}
     if (grid[z][y][x] == null) grid[z][y][x] = '.'
     return grid[z][y][x]
   }
   let current = { 0: input }
-  let next = {}
+  const next = {}
   for (let i = 0; i < 6; i++) {
     for (let z = -1 - i; z <= 1 + i; z++) {
       for (let y = -1 - i; y <= size + i; y++) {
@@ -37,8 +37,8 @@ function part1 (input) {
           }
           read(next, x, y, z)
           if (
-            (read(current, x, y, z) === '#' && (neighours === 2 || neighours === 3))
-            || (read(current, x, y, z) === '.' && neighours === 3)
+            (read(current, x, y, z) === '#' && (neighours === 2 || neighours === 3)) ||
+            (read(current, x, y, z) === '.' && neighours === 3)
           ) {
             next[z][y][x] = '#'
           } else {
@@ -60,8 +60,8 @@ function part2 (input) {
       return [j, col]
     }))]
   }))
-  let size = Object.keys(input).length
-  function read(grid, x, y, z, w) {
+  const size = Object.keys(input).length
+  function read (grid, x, y, z, w) {
     if (grid[w] == null) grid[w] = {}
     if (grid[w][z] == null) grid[w][z] = {}
     if (grid[w][z][y] == null) grid[w][z][y] = {}
@@ -69,7 +69,7 @@ function part2 (input) {
     return grid[w][z][y][x]
   }
   let current = { 0: { 0: input } }
-  let next = {}
+  const next = {}
   for (let i = 0; i < 6; i++) {
     for (let w = -1 - i; w <= 1 + i; w++) {
       for (let z = -1 - i; z <= 1 + i; z++) {
@@ -88,8 +88,8 @@ function part2 (input) {
             }
             read(next, x, y, z, w)
             if (
-              (read(current, x, y, z, w) === '#' && (neighours === 2 || neighours === 3))
-              || (read(current, x, y, z, w) === '.' && neighours === 3)
+              (read(current, x, y, z, w) === '#' && (neighours === 2 || neighours === 3)) ||
+              (read(current, x, y, z, w) === '.' && neighours === 3)
             ) {
               next[w][z][y][x] = '#'
             } else {
@@ -110,8 +110,8 @@ function part2 (input) {
   ).flat(3).filter(i => i === '#').length
 }
 
-let p1ex1 = part1(ex1)
-let p2ex1 = part2(ex1)
+const p1ex1 = part1(ex1)
+const p2ex1 = part2(ex1)
 console.assert(p1ex1 === 112, 'Part 1 example', p1ex1)
 console.log('Part 1 input:', part1(input))
 console.assert(p2ex1 === 848, 'Part 2 example', p2ex1)

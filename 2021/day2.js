@@ -1,7 +1,7 @@
 const fs = require('fs')
-let input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
+const input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
 
-let ex1 = `forward 5
+const ex1 = `forward 5
 down 5
 forward 8
 up 3
@@ -15,7 +15,7 @@ function part1 (input) {
   })
   let horizontal = 0
   let depth = 0
-  for (let [d, x] of input) {
+  for (const [d, x] of input) {
     if (d === 'f') {
       horizontal += x
     } else if (d === 'u') {
@@ -35,7 +35,7 @@ function part2 (input) {
   let horizontal = 0
   let depth = 0
   let aim = 0
-  for (let [d, x] of input) {
+  for (const [d, x] of input) {
     if (d === 'f') {
       horizontal += x
       depth += x * aim
@@ -47,7 +47,6 @@ function part2 (input) {
   }
   return horizontal * depth
 }
-
 
 console.assert(part1(ex1) === 150, 'Part 1 example', part1(ex1))
 console.log('Part 1 input', part1(input))

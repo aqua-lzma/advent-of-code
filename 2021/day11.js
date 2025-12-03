@@ -1,7 +1,7 @@
 import { log, getInput } from '../helpers/aoc.js'
 
-let input = await getInput(2021, 11)
-let ex1 = `5483143223
+const input = await getInput(2021, 11)
+const ex1 = `5483143223
 2745854711
 5264556173
 6141336146
@@ -41,8 +41,8 @@ function propegate (grid, flashed, x, y) {
 
 function part1 (input, days) {
   input = parseInput(input)
-  let width = input[0].length
-  let height = input.length
+  const width = input[0].length
+  const height = input.length
   let c = 0
   let flashed
   for (let i = 0; i < days; i++) {
@@ -59,8 +59,8 @@ function part1 (input, days) {
 
 function part2 (input) {
   input = parseInput(input)
-  let width = input[0].length
-  let height = input.length
+  const width = input[0].length
+  const height = input.length
   let flashed
   for (let i = 0; true; i++) {
     flashed = array2d(false, width, height)

@@ -20,22 +20,22 @@ const transformXY = {
 }
 
 function part1 (input) {
-  let [wire1, wire2] = parseInput(input)
-  let walked = new Set()
+  const [wire1, wire2] = parseInput(input)
+  const walked = new Set()
   let [x, y] = [0, 0]
-  for (let [dir, n] of wire1) {
+  for (const [dir, n] of wire1) {
     for (let i = 0; i < n; i++) {
       [x, y] = transformXY[dir](x, y)
-      let xy = `${x},${y}`
+      const xy = `${x},${y}`
       walked.add(xy)
     }
   }
   [x, y] = [0, 0]
-  let distances = []
-  for (let [dir, n] of wire2) {
+  const distances = []
+  for (const [dir, n] of wire2) {
     for (let i = 0; i < n; i++) {
       [x, y] = transformXY[dir](x, y)
-      let xy = `${x},${y}`
+      const xy = `${x},${y}`
       if (walked.has(xy)) distances.push(Math.abs(x) + Math.abs(y))
     }
   }
@@ -43,25 +43,25 @@ function part1 (input) {
 }
 
 function part2 (input) {
-  let [wire1, wire2] = parseInput(input)
-  let walked = new Map()
+  const [wire1, wire2] = parseInput(input)
+  const walked = new Map()
   let [x, y] = [0, 0]
   let c = 1
-  for (let [dir, n] of wire1) {
+  for (const [dir, n] of wire1) {
     for (let i = 0; i < n; i++) {
       [x, y] = transformXY[dir](x, y)
-      let xy = `${x},${y}`
+      const xy = `${x},${y}`
       walked.set(xy, c)
       c++
     }
   }
   [x, y] = [0, 0]
   c = 1
-  let distances = []
-  for (let [dir, n] of wire2) {
+  const distances = []
+  for (const [dir, n] of wire2) {
     for (let i = 0; i < n; i++) {
       [x, y] = transformXY[dir](x, y)
-      let xy = `${x},${y}`
+      const xy = `${x},${y}`
       if (walked.has(xy)) distances.push(walked.get(xy) + c)
       c++
     }

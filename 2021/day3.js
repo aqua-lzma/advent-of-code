@@ -1,7 +1,7 @@
 const fs = require('fs')
-let input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
+const input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
 
-let ex1 = `00100
+const ex1 = `00100
 11110
 10110
 10111
@@ -17,7 +17,7 @@ let ex1 = `00100
 function part1 (input) {
   input = input.split('\n')
   let gamma = Array(input[0].length).fill().map((v, index) => {
-    let ones = input.filter(value => value[index] === '1').length
+    const ones = input.filter(value => value[index] === '1').length
     return ones >= input.length / 2 ? '1' : '0'
   })
   let epsilon = gamma.map(i => i === '1' ? '0' : '1').join('')

@@ -1,7 +1,7 @@
 const fs = require('fs')
-let input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
+const input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
 
-let ex1 = `..##.......
+const ex1 = `..##.......
 #...#...#..
 .#....#..#.
 ..#.#...#.#
@@ -17,7 +17,7 @@ function part1 (input) {
   input = input.split('\n').map(i => i.split(''))
   let count = 0
   for (let y = 0; y < input.length; y++) {
-    let x = (y * 3) % input[0].length
+    const x = (y * 3) % input[0].length
     if (input[y][x] === '#') count++
   }
   return count
@@ -25,11 +25,11 @@ function part1 (input) {
 
 function part2 (input) {
   input = input.split('\n').map(i => i.split(''))
-  let slopes = [[1, 1], [3, 1], [5, 1], [7, 1], [1, 2]]
+  const slopes = [[1, 1], [3, 1], [5, 1], [7, 1], [1, 2]]
   return slopes.map(([dx, dy]) => {
     let count = 0
     for (let y = 0; y < input.length / dy; y++) {
-      let x = (y * dx) % input[0].length
+      const x = (y * dx) % input[0].length
       if (input[y * dy][x] === '#') count++
     }
     return count

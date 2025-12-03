@@ -1,42 +1,41 @@
 const fs = require('fs')
-let input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
+const input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
 
-let ex1 = `939
+const ex1 = `939
 7,13,x,x,59,x,31,19`
-let ex2 = `
+const ex2 = `
 17,x,13,19`
-let ex3 = `
+const ex3 = `
 67,7,59,61`
-let ex4 = `
+const ex4 = `
 67,x,7,59,61`
-let ex5 = `
+const ex5 = `
 67,7,x,59,61`
-let ex6 = `
+const ex6 = `
 1789,37,47,1889`
 
-
 function parseInput (input) {
-  let [time, busses] = input.split('\n')
+  const [time, busses] = input.split('\n')
   return [parseInt(time), busses.split(',').map(i => i === 'x' ? null : parseInt(i))]
 }
 
 function part1 (input) {
   let [time, busses] = parseInput(input)
   busses = busses.filter(i => i != null)
-  let nextAvailable = busses.map(i => Math.ceil(time / i) * i)
-  let first = nextAvailable.indexOf(Math.min(...nextAvailable))
+  const nextAvailable = busses.map(i => Math.ceil(time / i) * i)
+  const first = nextAvailable.indexOf(Math.min(...nextAvailable))
   return (nextAvailable[first] - time) * busses[first]
 }
 
 function part2 (input) {
-  let [time, busses] = parseInput(input)
+  const [time, busses] = parseInput(input)
   function extendedGcd (a, b) {
     let [oldR, r] = [a, b]
     let [oldS, s] = [1, 0]
     let [oldT, t] = [0, 1]
     while (r !== 0) {
-      let quotient = ~~(oldR / r)
-      let remainder = oldR % r
+      const quotient = ~~(oldR / r)
+      const remainder = oldR % r
       ;[oldR, r] = [r, remainder]
       ;[oldS, s] = [s, oldS - (quotient * s)]
       ;[oldT, t] = [t, oldT - (quotient * t)]
@@ -45,19 +44,19 @@ function part2 (input) {
   }
 
   function syncSteps (aStep, aPhase, bStep, bPhase) {
-    let [gcd, s, t] = extendedGcd(aStep, bStep)
-    let dif = bPhase - aPhase
+    const [gcd, s, t] = extendedGcd(aStep, bStep)
+    const dif = bPhase - aPhase
     if (dif % gcd !== 0) throw 'Never sync'
-    let cStep = aStep * bStep
-    let cPhase = ((((s * dif) % bStep) * aStep) + aPhase) % cStep
+    const cStep = aStep * bStep
+    const cPhase = ((((s * dif) % bStep) * aStep) + aPhase) % cStep
     return [cStep, cPhase]
   }
 
-  let stepPhases = busses.map((v, i) => [v, -i]).filter(([v]) => v != null)
+  const stepPhases = busses.map((v, i) => [v, -i]).filter(([v]) => v != null)
   let fullStep = stepPhases[0][0]
   let fullPhase = stepPhases[0][1]
   for (let i = 1; i < stepPhases.length; i++) {
-    let [newStep, newPhase] = stepPhases.at(i)
+    const [newStep, newPhase] = stepPhases.at(i)
     ;[fullStep, fullPhase] = syncSteps(fullStep, fullPhase, newStep, newPhase)
   }
 
@@ -70,7 +69,7 @@ function log (name, func, input, expected) {
   let out = func(...input)
   console.timeEnd(name)
   if (expected != null) {
-    let assertion = (typeof expected === 'function')
+    const assertion = (typeof expected === 'function')
       ? expected(out)
       : expected === out
     console.assert(assertion, 'expected:', expected)

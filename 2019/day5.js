@@ -16,14 +16,14 @@ function parseInput (input) {
 
 function part1 (input) {
   input = parseInput(input)
-  let out = intCode(input, [1])
+  const out = intCode(input, [1])
   if (!out.slice(0, -1).every(i => i === 0)) throw 'Failed test'
   return out.at(-1)
 }
 
 function part2 (input, param) {
   input = parseInput(input)
-  let out = intCode(input, [param])
+  const out = intCode(input, [param])
   return out.length === 1 ? out.at(-1) : out
 }
 

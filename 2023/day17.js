@@ -54,7 +54,7 @@ function part1 (input, min, max) {
         if (ny < 0 || ny >= height) break
         distance += input[ny][nx]
         if (i < min) continue
-        let nDirs = [0, 1, 2, 3].filter(j => j !== d && ((j + 2) % 4) !== d)
+        const nDirs = [0, 1, 2, 3].filter(j => j !== d && ((j + 2) % 4) !== d)
         const nkey = [nx, ny, ...nDirs].join(',')
         let tScore = gScore.get(nkey)
         if (tScore == null) tScore = Infinity

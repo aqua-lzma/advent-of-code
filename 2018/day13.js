@@ -9,36 +9,36 @@ function print (data) {
 }
 
 function iter (data) {
-  let out = Array(data.length).fill().map((e, i) => Array(data[i].length).fill())
-  for (let [rowN, row] of data.entries()) {
+  const out = Array(data.length).fill().map((e, i) => Array(data[i].length).fill())
+  for (const [rowN, row] of data.entries()) {
     for (let [colN, item] of row.entries()) {
       if (['<', '>', '^', 'v'].includes(item)) {
         item = { direction: item, next: 'l' }
         item.bg = ['<', '>'].includes(item.direction) ? '-' : '|'
       }
       if (item instanceof Object) {
-        let [dCol, dRow] = {
+        const [dCol, dRow] = {
           '<': [colN - 1, rowN],
           '>': [colN + 1, rowN],
           '^': [colN, rowN - 1],
-          'v': [colN, rowN + 1]
+          v: [colN, rowN + 1]
         }[item.direction]
         if (out[dRow][dCol] instanceof Object) {
           return [true, [dCol, dRow]]
         }
-        let target = data[dRow][dCol]
+        const target = data[dRow][dCol]
         if (['+', '/', '\\'].includes(target)) {
           if (target === '+') {
             [item.next, item.direction] = {
-              'l': ['s', ['<', '^', '>', 'v'][['^', '>', 'v', '<'].indexOf(item.direction)]],
-              'r': ['l', ['>', 'v', '<', '^'][['^', '>', 'v', '<'].indexOf(item.direction)]],
-              's': ['r', item.direction]
+              l: ['s', ['<', '^', '>', 'v'][['^', '>', 'v', '<'].indexOf(item.direction)]],
+              r: ['l', ['>', 'v', '<', '^'][['^', '>', 'v', '<'].indexOf(item.direction)]],
+              s: ['r', item.direction]
             }[item.next]
           } else {
             item.direction = {
               '^': ['>', '<'],
               '>': ['^', 'v'],
-              'v': ['<', '>'],
+              v: ['<', '>'],
               '<': ['v', '^']
             }[item.direction][['/', '\\'].indexOf(target)]
           }
@@ -57,7 +57,7 @@ function iter (data) {
 function f (data) {
   let [crashed, cur] = iter(data)
   while (!crashed) {
-    let t = iter(cur)
+    const t = iter(cur)
     crashed = t[0]
     cur = t[1]
   }

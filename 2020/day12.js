@@ -23,7 +23,7 @@ function part1 (input) {
   // 3 = West
   let east = 0
   let north = 0
-  for (let [c, n] of input) {
+  for (const [c, n] of input) {
     if (c === 'R') dir = (dir + (n / 90)) % 4
     else if (c === 'F') {
       if (dir === 0) north += n
@@ -46,7 +46,7 @@ function part2 (input) {
   let [ax, ay] = [0, 0]
   // Waypoint
   let [bx, by] = [10, 1]
-  for (let [c, n] of input) {
+  for (const [c, n] of input) {
     if (c === 'N') by += n
     else if (c === 'E') bx += n
     else if (c === 'S') by -= n

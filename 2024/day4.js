@@ -54,7 +54,7 @@ function part2 (input) {
         if (
           ((a === 'M' && d === 'S') || (a === 'S' && d === 'M')) &&
           ((b === 'M' && c === 'S') || (b === 'S' && c === 'M'))
-        ) count ++
+        ) count++
       }
     }
   }

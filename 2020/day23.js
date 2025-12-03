@@ -10,13 +10,13 @@ function parseInput (input) {
 function part1 (input) {
   input = parseInput(input)
   input = input.map(i => i - 1)
-  let map = new Array(9).fill().map((_, i) => input[(input.indexOf(i) + 1) % 9])
+  const map = new Array(9).fill().map((_, i) => input[(input.indexOf(i) + 1) % 9])
   let next = input[0]
   for (let i = 0; i < 100; i++) {
-    let current = next
-    let p1 = map[current]
-    let p2 = map[p1]
-    let p3 = map[p2]
+    const current = next
+    const p1 = map[current]
+    const p2 = map[p1]
+    const p3 = map[p2]
     next = map[p3]
     let dest = current === 0 ? 8 : current - 1
     while ([p1, p2, p3].includes(dest)) {
@@ -36,19 +36,19 @@ function part1 (input) {
 }
 
 function part2 (input) {
-  let t = 1000000
+  const t = 1000000
   input = parseInput(input)
   input = input.map(i => i - 1)
-  let map = new Array(t).fill().map((_, i) => i + 1)
+  const map = new Array(t).fill().map((_, i) => i + 1)
   input.forEach((_, i) => map[i] = input[input.indexOf(i) + 1])
   map[input[8]] = 9
   map[t - 1] = input[0]
   let next = input[0]
   for (let i = 0; i < 10000000; i++) {
-    let current = next
-    let p1 = map[current]
-    let p2 = map[p1]
-    let p3 = map[p2]
+    const current = next
+    const p1 = map[current]
+    const p2 = map[p1]
+    const p3 = map[p2]
     next = map[p3]
     let dest = current === 0 ? t - 1 : current - 1
     while ([p1, p2, p3].includes(dest)) {

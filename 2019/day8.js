@@ -1,8 +1,8 @@
 import { log, getInput } from '../helpers/aoc.js'
 
 const input = await getInput(2019, 8)
-const ex1 = `123456789012`
-const ex2 = `0222112222120000`
+const ex1 = '123456789012'
+const ex2 = '0222112222120000'
 
 function parseInput (input) {
   return input.split('').map(i => parseInt(i))
@@ -10,9 +10,9 @@ function parseInput (input) {
 
 function part1 (input, width, height) {
   input = parseInput(input)
-  let layers = Array(input.length / (width * height)).fill().map(_ => Array(3).fill(0))
+  const layers = Array(input.length / (width * height)).fill().map(_ => Array(3).fill(0))
   for (let i = 0; i < input.length; i++) {
-    let j = ~~(i / (width * height))
+    const j = ~~(i / (width * height))
     layers[j][input[i]]++
   }
   layers.sort((a, b) => a[0] - b[0])
@@ -21,11 +21,11 @@ function part1 (input, width, height) {
 
 function part2 (input, width, height) {
   input = parseInput(input)
-  let img = Array(height).fill().map(i => Array(width).fill())
+  const img = Array(height).fill().map(i => Array(width).fill())
   for (let i = 0; i < input.length; i++) {
-    let j = i % (width * height)
-    let x = j % width
-    let y = ~~(j / width)
+    const j = i % (width * height)
+    const x = j % width
+    const y = ~~(j / width)
     if (img[y][x] == null && input[i] !== 2) {
       img[y][x] = input[i] === 0 ? '.' : '#'
     }

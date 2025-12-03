@@ -20,9 +20,9 @@ function getLoopNum (n) {
 }
 
 function part1 (input) {
-  let [cardKey, doorKey] = parseInput(input)
-  let cardLoop = getLoopNum(cardKey)
-  let doorLoop = getLoopNum(doorKey)
+  const [cardKey, doorKey] = parseInput(input)
+  const cardLoop = getLoopNum(cardKey)
+  const doorLoop = getLoopNum(doorKey)
   let key1 = 1
   for (let i = 0; i < cardLoop; i++) {
     key1 *= doorKey

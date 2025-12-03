@@ -181,11 +181,10 @@ function part1 (input) {
     }
     scanners[id] = { scanner, distances }
   }
-  
 }
 
 function part2 (input) {
-  let scanners = parseInput(input)
+  const scanners = parseInput(input)
 }
 
 log('Part 1 example', part1, [ex1], 79)

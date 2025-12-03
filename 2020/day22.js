@@ -22,7 +22,7 @@ function parseInput (input) {
 }
 
 function part1 (input) {
-  let [deck1, deck2] = parseInput(input)
+  const [deck1, deck2] = parseInput(input)
   while (deck1.length !== 0 && deck2.length !== 0) {
     if (deck1[0] > deck2[0]) {
       deck1.push(deck1[0], deck2[0])
@@ -40,15 +40,15 @@ function part1 (input) {
 }
 
 function part2 (input) {
-  let [deck1, deck2] = parseInput(input)
-  let fullHistory = new Map()
+  const [deck1, deck2] = parseInput(input)
+  const fullHistory = new Map()
   function play (deck1, deck2) {
-    let startId = `${deck1.join(',')};${deck2.join(',')}`
-    let alreadyPlayed = fullHistory.get(startId)
+    const startId = `${deck1.join(',')};${deck2.join(',')}`
+    const alreadyPlayed = fullHistory.get(startId)
     if (alreadyPlayed != null) return alreadyPlayed
-    let history = []
+    const history = []
     while (deck1.length !== 0 && deck2.length !== 0) {
-      let id = `${deck1.join(',')};${deck2.join(',')}`
+      const id = `${deck1.join(',')};${deck2.join(',')}`
       if (history.includes(id)) {
         fullHistory.set(startId, 1)
         return 1
@@ -69,7 +69,7 @@ function part2 (input) {
       deck1.splice(0, 1)
       deck2.splice(0, 1)
     }
-    let out = deck1.length !== 0 ? 1 : 2
+    const out = deck1.length !== 0 ? 1 : 2
     fullHistory.set(startId, out)
     return out
   }

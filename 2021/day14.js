@@ -27,23 +27,23 @@ function parseInput (input) {
 }
 
 function part1 (input, steps) {
-  let [start, insertPairs] = parseInput(input)
-  let singleCounts = {}
+  const [start, insertPairs] = parseInput(input)
+  const singleCounts = {}
   let pairCounts = {}
   for (let i = 0; i < start.length; i++) {
-    let char = start[i]
+    const char = start[i]
     char in singleCounts ? singleCounts[char]++ : singleCounts[char] = 1
     if (i === 0) continue
-    let pair = start[i - 1] + start[i]
+    const pair = start[i - 1] + start[i]
     pair in pairCounts ? pairCounts[pair]++ : pairCounts[pair] = 1
   }
   for (let i = 0; i < steps; i++) {
-    let next = Object.fromEntries(Object.entries(pairCounts))
-    for (let [search, insert] of insertPairs) {
+    const next = Object.fromEntries(Object.entries(pairCounts))
+    for (const [search, insert] of insertPairs) {
       if (search in pairCounts && pairCounts[search] > 0) {
-        let n = pairCounts[search]
-        let pair1 = search[0] + insert
-        let pair2 = insert + search[1]
+        const n = pairCounts[search]
+        const pair1 = search[0] + insert
+        const pair2 = insert + search[1]
         next[search] -= n
         insert in singleCounts ? singleCounts[insert] += n : singleCounts[insert] = n
         pair1 in next ? next[pair1] += n : next[pair1] = n
@@ -52,8 +52,8 @@ function part1 (input, steps) {
     }
     pairCounts = next
   }
-  let min = Math.min(...Object.values(singleCounts))
-  let max = Math.max(...Object.values(singleCounts))
+  const min = Math.min(...Object.values(singleCounts))
+  const max = Math.max(...Object.values(singleCounts))
   return max - min
 }
 

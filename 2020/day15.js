@@ -1,20 +1,20 @@
-let input = `9,3,1,0,8,4`
+const input = '9,3,1,0,8,4'
 
-let ex1 = `0,3,6`
-let ex2 = `1,3,2`
-let ex3 = `2,1,3`
-let ex4 = `1,2,3`
-let ex5 = `2,3,1`
-let ex6 = `3,2,1`
-let ex7 = `3,1,2`
+const ex1 = '0,3,6'
+const ex2 = '1,3,2'
+const ex3 = '2,1,3'
+const ex4 = '1,2,3'
+const ex5 = '2,3,1'
+const ex6 = '3,2,1'
+const ex7 = '3,1,2'
 
 function part1 (input) {
   input = input.split(',').map(i => parseInt(i))
-  let map = new Map(input.map((v, i) => [v, i]))
+  const map = new Map(input.map((v, i) => [v, i]))
   let last = input[input.length - 1]
   for (let i = input.length; i < 2020; i++) {
     let next = 0
-    let lastIndex = map.get(last)
+    const lastIndex = map.get(last)
     if (lastIndex != null) {
       next = (i - 1) - lastIndex
     }
@@ -26,11 +26,11 @@ function part1 (input) {
 
 function part2 (input) {
   input = input.split(',').map(i => parseInt(i))
-  let map = new Map(input.map((v, i) => [v, i]))
+  const map = new Map(input.map((v, i) => [v, i]))
   let last = input[input.length - 1]
   for (let i = input.length; i < 30000000; i++) {
     let next = 0
-    let lastIndex = map.get(last)
+    const lastIndex = map.get(last)
     if (lastIndex != null) {
       next = (i - 1) - lastIndex
     }
@@ -40,21 +40,21 @@ function part2 (input) {
   return last
 }
 
-let p1ex1 = part1(ex1)
-let p1ex2 = part1(ex2)
-let p1ex3 = part1(ex3)
-let p1ex4 = part1(ex4)
-let p1ex5 = part1(ex5)
-let p1ex6 = part1(ex6)
-let p1ex7 = part1(ex7)
+const p1ex1 = part1(ex1)
+const p1ex2 = part1(ex2)
+const p1ex3 = part1(ex3)
+const p1ex4 = part1(ex4)
+const p1ex5 = part1(ex5)
+const p1ex6 = part1(ex6)
+const p1ex7 = part1(ex7)
 
-let p2ex1 = part2(ex1)
-let p2ex2 = part2(ex2)
-let p2ex3 = part2(ex3)
-let p2ex4 = part2(ex4)
-let p2ex5 = part2(ex5)
-let p2ex6 = part2(ex6)
-let p2ex7 = part2(ex7)
+const p2ex1 = part2(ex1)
+const p2ex2 = part2(ex2)
+const p2ex3 = part2(ex3)
+const p2ex4 = part2(ex4)
+const p2ex5 = part2(ex5)
+const p2ex6 = part2(ex6)
+const p2ex7 = part2(ex7)
 
 console.assert(p1ex1 === 436, 'Part 1 example 1', p1ex1)
 console.assert(p1ex2 === 1, 'Part 1 example 2', p1ex2)

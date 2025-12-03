@@ -20,38 +20,38 @@ function part1 (input, expandGrid) {
   input = parseInput(input)
   let width = input[0].length
   let height = input.length
-  
+
   let grid
   if (expandGrid) {
     width *= 5
     height *= 5
-    let iwidth = input[0].length
-    let iheight = input.length
+    const iwidth = input[0].length
+    const iheight = input.length
     grid = Array(height).fill().map(() => Array(width).fill(0))
     grid = grid.map((row, y) => row.map((n, x) => {
-      let ix = x % iwidth
-      let iy = y % iheight
-      let dx = ~~(x / iwidth)
-      let dy = ~~(y / iheight)
+      const ix = x % iwidth
+      const iy = y % iheight
+      const dx = ~~(x / iwidth)
+      const dy = ~~(y / iheight)
       return (input[iy][ix] + dx + dy) % 9 || 9
     }))
   } else grid = input
 
-  let targetx = width - 1
-  let targety = height - 1
+  const targetx = width - 1
+  const targety = height - 1
 
-  let gScore = Array(height).fill().map(() => Array(width).fill(Infinity))
+  const gScore = Array(height).fill().map(() => Array(width).fill(Infinity))
   gScore[0][0] = 0
-  let openSet = new PriorityQueue(([ax, ay], [bx, by]) => gScore[ay][ax] < gScore[by][bx])
+  const openSet = new PriorityQueue(([ax, ay], [bx, by]) => gScore[ay][ax] < gScore[by][bx])
   openSet.push([0, 0])
   while (openSet.size() !== 0) {
-    let [x, y] = openSet.pop()
-    for (let [dx, dy] of [[0, 1], [0, -1], [1, 0], [-1, 0]]) {
-      let nx = x + dx
-      let ny = y + dy
+    const [x, y] = openSet.pop()
+    for (const [dx, dy] of [[0, 1], [0, -1], [1, 0], [-1, 0]]) {
+      const nx = x + dx
+      const ny = y + dy
       if (nx < 0 || nx >= width) continue
       if (ny < 0 || ny >= height) continue
-      let distance = gScore[y][x] + grid[ny][nx]
+      const distance = gScore[y][x] + grid[ny][nx]
       if (distance < gScore[ny][nx]) {
         gScore[ny][nx] = distance
         openSet.push([nx, ny])

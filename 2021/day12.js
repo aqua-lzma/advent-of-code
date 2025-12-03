@@ -89,16 +89,16 @@ function parseInput (input) {
 }
 
 function arrayMap (input) {
-  let caves = [...new Set(input.flat())]
+  const caves = [...new Set(input.flat())]
   caves.sort((a, b) => b.charCodeAt(0) - a.charCodeAt(0))
-  let start = caves.indexOf('start')
-  let end = caves.indexOf('end')
-  let lastSmall = caves.findIndex(cave => !/^[a-z]+$/.test(cave))
-  let map = Array(caves.length).fill().map(() => Array())
-  for (let [a, b] of input) {
+  const start = caves.indexOf('start')
+  const end = caves.indexOf('end')
+  const lastSmall = caves.findIndex(cave => !/^[a-z]+$/.test(cave))
+  const map = Array(caves.length).fill().map(() => Array())
+  for (const [a, b] of input) {
     if (/^[A-Z]+$/.test(a) && /^[A-Z]+$/.test(b)) throw 'Infinite loop'
-    let an = caves.indexOf(a)
-    let bn = caves.indexOf(b)
+    const an = caves.indexOf(a)
+    const bn = caves.indexOf(b)
     if (an === start) map[an].push(bn)
     else if (bn === start) map[bn].push(an)
     else {
@@ -111,14 +111,14 @@ function arrayMap (input) {
 
 function part1 (input) {
   input = parseInput(input)
-  let [map, start, end, lastSmall] = arrayMap(input)
+  const [map, start, end, lastSmall] = arrayMap(input)
   let paths = 0
   function walk (current, visited) {
-    for (let cave of map[current]) {
+    for (const cave of map[current]) {
       if (cave < lastSmall && visited[cave] !== 0) continue
       if (cave === end) paths++
       else {
-        let copy = Uint8Array.from(visited)
+        const copy = Uint8Array.from(visited)
         if (cave < lastSmall) copy[cave]++
         walk(cave, copy)
       }
@@ -130,14 +130,14 @@ function part1 (input) {
 
 function part2 (input) {
   input = parseInput(input)
-  let [map, start, end, lastSmall] = arrayMap(input)
+  const [map, start, end, lastSmall] = arrayMap(input)
   let paths = 0
   function walk (current, visited) {
-    for (let cave of map[current]) {
+    for (const cave of map[current]) {
       if (cave < lastSmall && visited[cave] !== 0 && visited.some(i => i > 1)) continue
       if (cave === end) paths++
       else {
-        let copy = Uint8Array.from(visited)
+        const copy = Uint8Array.from(visited)
         if (cave < lastSmall) copy[cave]++
         walk(cave, copy)
       }
@@ -156,7 +156,6 @@ log('Part 2 example 1', part2, [ex1], 36)
 log('Part 2 example 2', part2, [ex2], 103)
 log('Part 2 example 3', part2, [ex3], 3509)
 log('Part 2 input', part2, [input])
-
 
 log('Part 1 bigboy', part1, [bigboy])
 log('Part 2 bigboy', part2, [bigboy])

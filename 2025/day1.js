@@ -12,11 +12,11 @@ L99
 R14
 L82`
 
-function parseInput(input) {
+function parseInput (input) {
   return input.split('\n').map(i => [i[0], Number.parseInt(i.slice(1))])
 }
 
-function part1(input) {
+function part1 (input) {
   input = parseInput(input)
   let p = 50
   let c = 0
@@ -28,7 +28,7 @@ function part1(input) {
   return c
 }
 
-function part2(input) {
+function part2 (input) {
   input = parseInput(input)
   let p = 50
   let c = 0

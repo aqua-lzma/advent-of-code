@@ -1,7 +1,7 @@
 const fs = require('fs')
-let input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
+const input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
 
-let ex1 = `[({(<(())[]>[[{[]{<()<>>
+const ex1 = `[({(<(())[]>[[{[]{<()<>>
 [(()[<>])]({[<{<<[]>>(
 {([(<{}[<>[]}>{[]{[(<()>
 (((({<>}<{<{<>}{[]{[]{}
@@ -26,7 +26,7 @@ function part1 (input) {
       next = line.replace(/\(\)|\[\]|{}|<>/g, '')
     }
     if (/\)|\]|}|>/.test(line)) {
-      let first = line.search(/\)|\]|}|>/)
+      const first = line.search(/\)|\]|}|>/)
       if (line[first] === ')') score += 3
       if (line[first] === ']') score += 57
       if (line[first] === '}') score += 1197
@@ -38,7 +38,7 @@ function part1 (input) {
 
 function part2 (input) {
   input = parseInput(input)
-  let missing = input.map(line => {
+  const missing = input.map(line => {
     let next = line.replace(/\(\)|\[\]|{}|<>/g, '')
     while (line !== next) {
       line = next
@@ -46,14 +46,14 @@ function part2 (input) {
     }
     return line
   })
-  let incomplete = missing.filter(line => {
+  const incomplete = missing.filter(line => {
     if (/\)|\]|}|>/.test(line)) return false
     return true
   })
   let scores = incomplete.map(line => {
     let score = 0
     for (let i = 0; i < line.length; i++) {
-      let char = line.at(~i)
+      const char = line.at(~i)
       score *= 5
       if (char === '(') score += 1
       if (char === '[') score += 2
@@ -71,7 +71,7 @@ function log (name, func, input, expected) {
   let out = func(...input)
   console.timeEnd(name)
   if (expected != null) {
-    let assertion = (typeof expected === 'function')
+    const assertion = (typeof expected === 'function')
       ? expected(out)
       : expected === out
     if (!assertion) console.warn('Expected:', expected)

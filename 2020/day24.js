@@ -31,7 +31,7 @@ function part1 (input) {
   const coords = {}
   for (const line of input) {
     let [x, y] = [0, 0]
-    for (let dir of line) {
+    for (const dir of line) {
       if (dir === 'ne') [x, y] = [x + 1, y]
       else if (dir === 'e') [x, y] = [x, y - 1]
       else if (dir === 'se') [x, y] = [x - 1, y - 1]
@@ -46,7 +46,7 @@ function part1 (input) {
 }
 
 function testInactive (current, next, x, y) {
-  let neighbours = [
+  const neighbours = [
     [x + 1, y], // north east
     [x, y - 1], // east
     [x - 1, y - 1], // south east
@@ -54,12 +54,12 @@ function testInactive (current, next, x, y) {
     [x, y + 1], // west
     [x + 1, y + 1] // north west
   ]
-  let nCount = neighbours.filter(([x2, y2]) => current.has(`${x2},${y2}`)).length
+  const nCount = neighbours.filter(([x2, y2]) => current.has(`${x2},${y2}`)).length
   if (nCount === 2) next.add(`${x},${y}`)
 }
 
 function testActive (current, next, x, y) {
-  let neighbours = [
+  const neighbours = [
     [x + 1, y], // north east
     [x, y - 1], // east
     [x - 1, y - 1], // south east
@@ -67,7 +67,7 @@ function testActive (current, next, x, y) {
     [x, y + 1], // west
     [x + 1, y + 1] // north west
   ]
-  let nCount = neighbours.filter(([x2, y2]) => current.has(`${x2},${y2}`)).length
+  const nCount = neighbours.filter(([x2, y2]) => current.has(`${x2},${y2}`)).length
   if (nCount === 1 || nCount === 2) next.add(`${x},${y}`)
   for (const [x2, y2] of neighbours) {
     testInactive(current, next, x2, y2)
@@ -83,7 +83,7 @@ function part2 (input) {
   let tiles = new Set()
   for (const line of input) {
     let [x, y] = [0, 0]
-    for (let dir of line) {
+    for (const dir of line) {
       if (dir === 'ne') [x, y] = [x + 1, y]
       else if (dir === 'e') [x, y] = [x, y - 1]
       else if (dir === 'se') [x, y] = [x - 1, y - 1]
@@ -92,11 +92,11 @@ function part2 (input) {
       else if (dir === 'nw') [x, y] = [x + 1, y + 1]
       else throw 'Invalid dir'
     }
-    let xy = `${x},${y}`
+    const xy = `${x},${y}`
     if (tiles.has(xy)) tiles.delete(xy)
     else tiles.add(xy)
   }
-  
+
   for (let i = 0; i < 100; i++) {
     const next = new Set()
     for (const xy of tiles) {

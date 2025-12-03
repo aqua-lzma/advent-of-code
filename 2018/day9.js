@@ -1,18 +1,18 @@
 function f (players, last) {
-  let list = [0]
-  let scores = Array(players).fill(0)
+  const list = [0]
+  const scores = Array(players).fill(0)
   let target = 0
   let turn = -1
   for (let i = 1; i <= last; i++) {
     turn = (turn + 1) % players
-    let length = list.length
+    const length = list.length
     if (i % 23 === 0) {
-      let nt = ((target - 8) % length) + 1
-      let score = list.splice(nt, 1)[0] + i
+      const nt = ((target - 8) % length) + 1
+      const score = list.splice(nt, 1)[0] + i
       scores[turn] += score
       target = nt
     } else {
-      let nt = ((target + 1) % length) + 1
+      const nt = ((target + 1) % length) + 1
       list.splice(nt, 0, i)
       target = nt
     }

@@ -1,7 +1,7 @@
 const fs = require('fs')
-let input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
+const input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
 
-let ex1 = `1-3 a: abcde
+const ex1 = `1-3 a: abcde
 1-3 b: cdefg
 2-9 c: ccccccccc`
 
@@ -11,7 +11,7 @@ function part1 (input) {
     return [parseInt(a), parseInt(b), c, pass.split('')]
   })
   return input.filter(([a, b, c, pass]) => {
-    let matches = pass.filter(char => char === c).length
+    const matches = pass.filter(char => char === c).length
     return matches >= a && matches <= b
   }).length
 }

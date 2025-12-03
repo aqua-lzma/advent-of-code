@@ -27,23 +27,23 @@ function parseInput (input) {
   let [dots, folds] = input.split('\n\n')
   dots = dots.split('\n').map(line => line.split(',').map(i => parseInt(i)))
   folds = folds.split('\n').map(line => {
-    let [axis, n] = line.slice(11).split('=')
+    const [axis, n] = line.slice(11).split('=')
     return [axis, parseInt(n)]
   })
   return [dots, folds]
 }
 
 function part1Old (input) {
-  let [dots, folds] = parseInput(input)
+  const [dots, folds] = parseInput(input)
   let width = Math.max(...dots.map(([x, y]) => x)) + 1
   let height = Math.max(...dots.map(([x, y]) => y)) + 1
   let grid = Array(height).fill().map(() => Array(width).fill(0))
-  for (let [x, y] of dots) {
+  for (const [x, y] of dots) {
     grid[y][x]++
   }
-  for (let [axis, n] of folds) {
+  for (const [axis, n] of folds) {
     if (axis === 'y') {
-      let next = Array(n).fill().map(() => Array(width).fill(0))
+      const next = Array(n).fill().map(() => Array(width).fill(0))
       for (let y = 0; y < n; y++) {
         for (let x = 0; x < width; x++) {
           next[y][x] = grid[y][x]
@@ -57,7 +57,7 @@ function part1Old (input) {
       height = n
       grid = next
     } else {
-      let next = Array(height).fill().map(() => Array(n).fill(0))
+      const next = Array(height).fill().map(() => Array(n).fill(0))
       for (let y = 0; y < height; y++) {
         for (let x = 0; x < n; x++) {
           next[y][x] = grid[y][x]
@@ -77,14 +77,14 @@ function part1Old (input) {
 }
 
 function part1 (input) {
-  let [dots, folds] = parseInput(input)
-  let width = Math.max(...dots.map(([x, y]) => x)) + 1
-  let height = Math.max(...dots.map(([x, y]) => y)) + 1
+  const [dots, folds] = parseInput(input)
+  const width = Math.max(...dots.map(([x, y]) => x)) + 1
+  const height = Math.max(...dots.map(([x, y]) => y)) + 1
   let grid = Array(height).fill().map(() => Array(width).fill(0))
-  for (let [x, y] of dots) {
+  for (const [x, y] of dots) {
     grid[y][x]++
   }
-  for (let [axis, n] of folds) {
+  for (const [axis, n] of folds) {
     if (axis === 'y') {
       grid = grid.map((row, y) => {
         if (y <= n) return row
@@ -103,14 +103,14 @@ function part1 (input) {
 }
 
 function part2 (input) {
-  let [dots, folds] = parseInput(input)
-  let width = Math.max(...dots.map(([x, y]) => x)) + 1
-  let height = Math.max(...dots.map(([x, y]) => y)) + 1
+  const [dots, folds] = parseInput(input)
+  const width = Math.max(...dots.map(([x, y]) => x)) + 1
+  const height = Math.max(...dots.map(([x, y]) => y)) + 1
   let grid = Array(height).fill().map(() => Array(width).fill(0))
-  for (let [x, y] of dots) {
+  for (const [x, y] of dots) {
     grid[y][x]++
   }
-  for (let [axis, n] of folds) {
+  for (const [axis, n] of folds) {
     if (axis === 'y') {
       grid = grid.map((row, y) => {
         if (y <= n) return row

@@ -1,14 +1,12 @@
 const fs = require('fs')
-let input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
+const input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
 
-let ex1 = `1 + 2 * 3 + 4 * 5 + 6`
-let ex2 = `1 + (2 * 3) + (4 * (5 + 6))`
-let ex3 = `2 * 3 + (4 * 5)`
-let ex4 = `5 + (8 * 3 + 9 + 3 * 4 * 3)`
-let ex5 = `5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))`
-let ex6 = `((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2`
-
-
+const ex1 = '1 + 2 * 3 + 4 * 5 + 6'
+const ex2 = '1 + (2 * 3) + (4 * (5 + 6))'
+const ex3 = '2 * 3 + (4 * 5)'
+const ex4 = '5 + (8 * 3 + 9 + 3 * 4 * 3)'
+const ex5 = '5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))'
+const ex6 = '((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2'
 
 function part1 (input) {
   input = input.split('\n').map(line =>
@@ -17,9 +15,9 @@ function part1 (input) {
 
   function calc (list) {
     while (list.includes('(')) {
-      let from = list.lastIndexOf('(')
-      let to = list.indexOf(')', from)
-      let res = calc(list.slice(from + 1, to))
+      const from = list.lastIndexOf('(')
+      const to = list.indexOf(')', from)
+      const res = calc(list.slice(from + 1, to))
       list.splice(from, to - from + 1, res)
     }
     let acc = list[0]
@@ -30,7 +28,7 @@ function part1 (input) {
     return acc
   }
 
-  let results = input.map(calc)
+  const results = input.map(calc)
   return results.reduce((acc, cur) => acc + cur)
 }
 
@@ -41,37 +39,37 @@ function part2 (input) {
 
   function calc (list) {
     while (list.includes('(')) {
-      let from = list.lastIndexOf('(')
-      let to = list.indexOf(')', from)
-      let res = calc(list.slice(from + 1, to))
+      const from = list.lastIndexOf('(')
+      const to = list.indexOf(')', from)
+      const res = calc(list.slice(from + 1, to))
       list.splice(from, to - from + 1, res)
     }
     while (list.includes('+')) {
-      let i = list.indexOf('+')
-      let a = list[i - 1]
-      let b = list[i + 1]
+      const i = list.indexOf('+')
+      const a = list[i - 1]
+      const b = list[i + 1]
       list.splice(i - 1, 3, a + b)
     }
     return list.filter(i => i !== '*').reduce((acc, cur) => acc * cur)
   }
 
-  let results = input.map(calc)
+  const results = input.map(calc)
   return results.reduce((acc, cur) => acc + cur)
 }
 
-let p1ex1 = part1(ex1)
-let p1ex2 = part1(ex2)
-let p1ex3 = part1(ex3)
-let p1ex4 = part1(ex4)
-let p1ex5 = part1(ex5)
-let p1ex6 = part1(ex6)
+const p1ex1 = part1(ex1)
+const p1ex2 = part1(ex2)
+const p1ex3 = part1(ex3)
+const p1ex4 = part1(ex4)
+const p1ex5 = part1(ex5)
+const p1ex6 = part1(ex6)
 
-let p2ex1 = part2(ex1)
-let p2ex2 = part2(ex2)
-let p2ex3 = part2(ex3)
-let p2ex4 = part2(ex4)
-let p2ex5 = part2(ex5)
-let p2ex6 = part2(ex6)
+const p2ex1 = part2(ex1)
+const p2ex2 = part2(ex2)
+const p2ex3 = part2(ex3)
+const p2ex4 = part2(ex4)
+const p2ex5 = part2(ex5)
+const p2ex6 = part2(ex6)
 
 console.assert(p1ex1 === 71, 'Part 1 example 1', p1ex1)
 console.assert(p1ex2 === 51, 'Part 1 example 2', p1ex2)

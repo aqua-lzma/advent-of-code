@@ -139,7 +139,7 @@ function part1 (input) {
     }
   }
   const targetRooms = Array(input.length).fill().map(floor => [...Array(4).keys()].join(',')).join(':')
-  let targetId = `${Array(7).fill(-1)};${targetRooms}`
+  const targetId = `${Array(7).fill(-1)};${targetRooms}`
   const d = gScore.get(targetId)
   /*
   while (targetId != null) {

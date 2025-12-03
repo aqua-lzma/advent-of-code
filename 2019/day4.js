@@ -27,7 +27,7 @@ function part1 (input) {
 }
 
 function part2 (input) {
-    input = parseInput(input)
+  input = parseInput(input)
 
   function test (n) {
     n = String(n).padStart(6, 0).split('').map(i => parseInt(i))

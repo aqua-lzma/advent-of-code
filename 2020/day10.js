@@ -1,7 +1,7 @@
 const fs = require('fs')
-let input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
+const input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
 
-let ex1 = `16
+const ex1 = `16
 10
 15
 5
@@ -13,7 +13,7 @@ let ex1 = `16
 12
 4`
 
-let ex2 = `28
+const ex2 = `28
 33
 18
 42
@@ -55,9 +55,9 @@ function parseInput (input) {
 function part1 (input) {
   input = parseInput(input)
   input.push(input[input.length - 1] + 3)
-  let difs = [0, 0, 0]
+  const difs = [0, 0, 0]
   for (let i = 1; i < input.length; i++) {
-    let dif = input[i] - input[i - 1]
+    const dif = input[i] - input[i - 1]
     difs[dif - 1]++
   }
   return difs[0] * difs[2]
@@ -65,10 +65,10 @@ function part1 (input) {
 
 function part2 (input) {
   input = parseInput(input)
-  let series = []
+  const series = []
   let c = 0
   for (let i = 1; i < input.length; i++) {
-    let dif = input[i] - input[i - 1]
+    const dif = input[i] - input[i - 1]
     if (dif === 1) c++
     else {
       if (c > 1) series.push(c - 1)
@@ -76,13 +76,13 @@ function part2 (input) {
     }
   }
   if (c > 1) series.push(c - 1)
-  let possibilities = series.map(i => [2, 4, 7][i - 1])
+  const possibilities = series.map(i => [2, 4, 7][i - 1])
   return possibilities.reduce((acc, cur) => acc * cur)
 }
 
 function log (name, func, input, expected) {
   console.time(name)
-  let out = func(input)
+  const out = func(input)
   console.timeEnd(name)
   if (expected != null) {
     console.assert(out === expected, 'expected:', expected)

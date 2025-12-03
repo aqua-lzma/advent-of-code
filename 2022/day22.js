@@ -91,7 +91,7 @@ function part1 (input) {
 }
 
 function part2 (input, faceSize) {
-  let { map, width, instructions, startX } = parseInput(input)
+  const { map, width, instructions, startX } = parseInput(input)
   // instructions = '1L10R1R20R10L1L60L20R1R20L60R1R30L50R1R30L1L80R1R30L1L80L40R1R30'.split(/([RDUL])/g)
   const height = map.length
   let dir = 0 // R=0 D=1 L=2 U=3

@@ -1,14 +1,14 @@
-let start1 = '#..#.#..##......###...###'
-let rules1 = ['...##', '..#..', '.#...', '.#.#.', '.#.##', '.##..', '.####', '#.#.#', '#.###', '##.#.', '##.##', '###..', '###.#', '####.']
-let start2 = '####..##.##..##..#..###..#....#.######..###########.#...#.##..####.###.#.###.###..#.####..#.#..##..#'
-let rules2 = ['...##', '.#...', '#...#', '..###', '##.#.', '..#.#', '.##..', '.#..#', '#.#.#', '#..#.', '####.', '.##.#']
+const start1 = '#..#.#..##......###...###'
+const rules1 = ['...##', '..#..', '.#...', '.#.#.', '.#.##', '.##..', '.####', '#.#.#', '#.###', '##.#.', '##.##', '###..', '###.#', '####.']
+const start2 = '####..##.##..##..#..###..#....#.######..###########.#...#.##..####.###.#.###.###..#.####..#.#..##..#'
+const rules2 = ['...##', '.#...', '#...#', '..###', '##.#.', '..#.#', '.##..', '.#..#', '#.#.#', '#..#.', '####.', '.##.#']
 
 function iter (start, rules, zero) {
   start = `..${start}..`
   zero -= 2
-  let l = []
+  const l = []
   for (let i = 0; i < start.length; i++) {
-    let key = [
+    const key = [
       start[i - 2] == null ? '.' : start[i - 2],
       start[i - 1] == null ? '.' : start[i - 1],
       start[i],
@@ -21,8 +21,8 @@ function iter (start, rules, zero) {
       l.push('.')
     }
   }
-  let str = l.join('')
-  let t = str.replace(/^\.+/g, '')
+  const str = l.join('')
+  const t = str.replace(/^\.+/g, '')
   zero -= t.length - str.length
   return [t.replace(/\.+$/g, ''), zero]
 }
@@ -30,7 +30,7 @@ function iter (start, rules, zero) {
 function p1 (start, rules, to) {
   let zero = 0
   for (let i = 0; i < to; i++) {
-    let t = iter(start, rules, zero)
+    const t = iter(start, rules, zero)
     start = t[0]
     zero = t[1]
   }
@@ -48,7 +48,7 @@ function p2 (start, rules, to) {
   let last = ''
   let val = 0
   for (let i = 0; i < to; i++) {
-    let t = iter(start, rules, zero)
+    const t = iter(start, rules, zero)
     start = t[0]
     zero = t[1]
     if (last === start) {

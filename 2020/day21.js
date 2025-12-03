@@ -1,35 +1,35 @@
 const { log } = require('../../helpers.js')
 const fs = require('fs')
-let input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
+const input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
 
-let ex1 = `mxmxvkd kfcds sqjhc nhms (contains dairy, fish)
+const ex1 = `mxmxvkd kfcds sqjhc nhms (contains dairy, fish)
 trh fvjkl sbzzf mxmxvkd (contains dairy)
 sqjhc fvjkl (contains soy)
 sqjhc mxmxvkd sbzzf (contains fish)`
 
 function parseInput (input) {
   return input.split('\n').map(line => {
-    let [ingredients, allergens] = line.split(' (contains ')
+    const [ingredients, allergens] = line.split(' (contains ')
     return [ingredients.split(' '), allergens.slice(0, -1).split(', ')]
   })
 }
 
 function part1 (input) {
   input = parseInput(input)
-  let ingredientSet = new Set()
-  let allergenSet = new Set()
-  for (let [ingredients, allergens] of input) {
-    for (let ingredient of ingredients) ingredientSet.add(ingredient)
-    for (let allergen of allergens) allergenSet.add(allergen)
+  const ingredientSet = new Set()
+  const allergenSet = new Set()
+  for (const [ingredients, allergens] of input) {
+    for (const ingredient of ingredients) ingredientSet.add(ingredient)
+    for (const allergen of allergens) allergenSet.add(allergen)
   }
-  let ingredientArr = [...ingredientSet]
-  let allergenArr = [...allergenSet]
-  let map = {} // Allergen -> Ingredient
+  const ingredientArr = [...ingredientSet]
+  const allergenArr = [...allergenSet]
+  const map = {} // Allergen -> Ingredient
   while (!allergenArr.every(allergen => allergen in map)) {
-    for (let allergen of allergenArr) {
+    for (const allergen of allergenArr) {
       if (allergen in map) continue
       let possible = []
-      for (let [ingredients, allergens] of input) {
+      for (const [ingredients, allergens] of input) {
         if (!allergens.includes(allergen)) continue
         if (possible.length === 0) possible = ingredients
         possible = possible.filter(ingredient => (
@@ -39,17 +39,17 @@ function part1 (input) {
         if (possible.length === 1) break
       }
       if (possible.length === 1) {
-        let ingredient = [...possible][0]
+        const ingredient = [...possible][0]
         map[allergen] = ingredient
       }
     }
   }
-  let allergenFree = ingredientArr.filter(ingredient => {
+  const allergenFree = ingredientArr.filter(ingredient => {
     return !Object.values(map).includes(ingredient)
   })
-  let counts = input.map(([ingredients]) => {
+  const counts = input.map(([ingredients]) => {
     let count = 0
-    for (let ingredient of ingredients) {
+    for (const ingredient of ingredients) {
       if (allergenFree.includes(ingredient)) count++
     }
     return count
@@ -59,17 +59,17 @@ function part1 (input) {
 
 function part2 (input) {
   input = parseInput(input)
-  let allergenSet = new Set()
-  for (let [ingredients, allergens] of input) {
-    for (let allergen of allergens) allergenSet.add(allergen)
+  const allergenSet = new Set()
+  for (const [ingredients, allergens] of input) {
+    for (const allergen of allergens) allergenSet.add(allergen)
   }
-  let allergenArr = [...allergenSet]
-  let map = {} // Allergen -> Ingredient
+  const allergenArr = [...allergenSet]
+  const map = {} // Allergen -> Ingredient
   while (!allergenArr.every(allergen => allergen in map)) {
-    for (let allergen of allergenArr) {
+    for (const allergen of allergenArr) {
       if (allergen in map) continue
       let possible = []
-      for (let [ingredients, allergens] of input) {
+      for (const [ingredients, allergens] of input) {
         if (!allergens.includes(allergen)) continue
         if (possible.length === 0) possible = ingredients
         possible = possible.filter(ingredient => (
@@ -79,12 +79,12 @@ function part2 (input) {
         if (possible.length === 1) break
       }
       if (possible.length === 1) {
-        let ingredient = [...possible][0]
+        const ingredient = [...possible][0]
         map[allergen] = ingredient
       }
     }
   }
-  let allergenFull = Object.entries(map)
+  const allergenFull = Object.entries(map)
   allergenFull.sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0)
   return allergenFull.map(([a, i]) => i).join(',')
 }

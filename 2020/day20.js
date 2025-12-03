@@ -1,7 +1,7 @@
 const fs = require('fs')
-let input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
+const input = fs.readFileSync(__dirname + '/input.txt', 'utf8')
 
-let ex1 = `Tile 2311:
+const ex1 = `Tile 2311:
 ..##.#..#.
 ##..#.....
 #...##..#.
@@ -109,10 +109,10 @@ Tile 3079:
 ..#.......
 ..#.###...`
 
-let monster = `                  # 
+const monster = `                  # 
 #    ##    ##    ###
  #  #  #  #  #  #   `.split('\n')
-let monsterCoords = []
+const monsterCoords = []
 for (let y = 0; y < monster.length; y++) {
   for (let x = 0; x < monster[0].length; x++) {
     if (monster[y][x] === '#') monsterCoords.push([x, y])
@@ -142,7 +142,7 @@ function rot270 (grid) {
 function parseInput (input) {
   return Object.fromEntries(input.split('\n\n').map(tile => {
     tile = tile.split('\n')
-    let id = tile[0].slice(5, -1)
+    const id = tile[0].slice(5, -1)
     tile = tile.slice(1).map(row => row.split(''))
     tile = tile.map(row => row.map(i => i === '#' ? 1 : 0))
     return [parseInt(id), { tile }]
@@ -152,9 +152,9 @@ function parseInput (input) {
 function part1 (input) {
   input = parseInput(input)
 
-  for (let id in input) {
-    let { tile } = input[id]
-    let orients = input[id].orients = []
+  for (const id in input) {
+    const { tile } = input[id]
+    const orients = input[id].orients = []
     for (let orient = 0; orient < 8; orient++) {
       let tileCopy = copy(tile)
       if (orient % 2 === 1) tileCopy = flip(tileCopy)
@@ -170,14 +170,14 @@ function part1 (input) {
     }
   }
 
-  for (let id in input) {
-    let { orients } = input[id]
-    let set1 = new Set(orients.flat())
-    let neighbours = input[id].neighbours = []
-    for (let id2 in input) {
+  for (const id in input) {
+    const { orients } = input[id]
+    const set1 = new Set(orients.flat())
+    const neighbours = input[id].neighbours = []
+    for (const id2 in input) {
       if (id === id2) continue
-      let { orients: orients2 } = input[id2]
-      let set2 = new Set(orients2.flat())
+      const { orients: orients2 } = input[id2]
+      const set2 = new Set(orients2.flat())
       for (edge2 of set2) {
         if (set1.has(edge2)) {
           neighbours.push(id2)
@@ -187,8 +187,8 @@ function part1 (input) {
     }
   }
 
-  let corners = Object.entries(input).filter(([id, { neighbours }]) => neighbours.length === 2)
-  let cornerIds = corners.map(([id]) => id)
+  const corners = Object.entries(input).filter(([id, { neighbours }]) => neighbours.length === 2)
+  const cornerIds = corners.map(([id]) => id)
   return cornerIds.reduce((sum, cur) => sum * cur)
 }
 
@@ -196,9 +196,9 @@ function part2 (input) {
   input = parseInput(input)
 
   // Calculate edge ids
-  for (let id in input) {
-    let { tile } = input[id]
-    let orients = input[id].orients = []
+  for (const id in input) {
+    const { tile } = input[id]
+    const orients = input[id].orients = []
     for (let orient = 0; orient < 8; orient++) {
       let tileCopy = copy(tile)
       if (orient % 2 === 1) tileCopy = flip(tileCopy)
@@ -210,26 +210,27 @@ function part2 (input) {
           parseInt(tileCopy[0].join(''), 2),
           parseInt(tileCopy.map(row => row[0]).join(''), 2),
           parseInt(tileCopy.map(row => row[9]).join(''), 2),
-          parseInt(tileCopy[9].join(''), 2),
-        ]}
+          parseInt(tileCopy[9].join(''), 2)
+        ]
+      }
       )
     }
   }
 
   // Calculate possible neighbours for each tile orientation
-  for (let id in input) {
-    let { orients } = input[id]
+  for (const id in input) {
+    const { orients } = input[id]
     let maxNeighbours = 0
     for (let i = 0; i < 8; i++) {
-      let orient = orients[i]
-      let edges = orient.edges
-      let neighbours = orient.neighbours = Array(4).fill().map(i => [])
-      for (let id2 in input) {
+      const orient = orients[i]
+      const edges = orient.edges
+      const neighbours = orient.neighbours = Array(4).fill().map(i => [])
+      for (const id2 in input) {
         if (id === id2) continue
-        let { orients: orients2 } = input[id2]
+        const { orients: orients2 } = input[id2]
         for (let j = 0; j < 8; j++) {
-          let orient2 = orients2[j]
-          let edges2 = orient2.edges
+          const orient2 = orients2[j]
+          const edges2 = orient2.edges
           if (edges[0] === edges2[3]) neighbours[0].push([id2, j])
           if (edges[1] === edges2[2]) neighbours[1].push([id2, j])
           if (edges[2] === edges2[1]) neighbours[2].push([id2, j])
@@ -239,8 +240,8 @@ function part2 (input) {
       maxNeighbours = Math.max(maxNeighbours, neighbours.filter(i => i.length !== 0).length)
     }
     // Possible neighbours are never wasted. Aint that cute.
-    for (let orient of orients) {
-      let { neighbours } = orient
+    for (const orient of orients) {
+      const { neighbours } = orient
       if (neighbours.filter(i => i.length !== 0).length !== maxNeighbours) {
         orient.valid = false
       } else {
@@ -252,34 +253,34 @@ function part2 (input) {
   }
 
   // Build full grid (tile id and orientation)
-  let size = Math.sqrt(Object.keys(input).length)
-  let idGrid = Array(size).fill().map(i => Array(size).fill())
-  for (let id in input) input[id].used = false
+  const size = Math.sqrt(Object.keys(input).length)
+  const idGrid = Array(size).fill().map(i => Array(size).fill())
+  for (const id in input) input[id].used = false
   for (let i = 0; i < size * size; i++) {
-    let x = i % size
-    let y = Math.floor(i / size)
+    const x = i % size
+    const y = Math.floor(i / size)
     let targetNeighbours = 2
     let targetLeft, targetTop
     if (x !== 0) {
       if (x !== size - 1) targetNeighbours++
-      let [id, orient] = idGrid[y][x - 1]
+      const [id, orient] = idGrid[y][x - 1]
       targetLeft = input[id].orients[orient].edges[2]
     }
     if (y !== 0) {
       if (y !== size - 1) targetNeighbours++
-      let [id, orient] = idGrid[y - 1][x]
+      const [id, orient] = idGrid[y - 1][x]
       targetTop = input[id].orients[orient].edges[3]
     }
     let found = false
     // -- TODO -- Inneficient to go over full list:
     // Better to go over possible neighbours of previous tile
-    for (let id in input) {
+    for (const id in input) {
       if (found) break
-      let tile = input[id]
+      const tile = input[id]
       if (tile.used) continue
       if (tile.maxNeighbours !== targetNeighbours) continue
       for (let j = 0; j < 8; j++) {
-        let orient = tile.orients[j]
+        const orient = tile.orients[j]
         if (!orient.valid) continue
         if (orient.invalidPos.includes(i)) continue
         if (targetLeft != null && orient.edges[1] !== targetLeft) continue
@@ -292,20 +293,20 @@ function part2 (input) {
     }
     // If it couldnt find a possible tile, assume the previous tile was incorrect
     if (!found) {
-      let dx = (i - 1) % size
-      let dy = Math.floor((i - 1) / size)
-      let [id, orient] = idGrid[dy][dx]
+      const dx = (i - 1) % size
+      const dy = Math.floor((i - 1) / size)
+      const [id, orient] = idGrid[dy][dx]
       input[id].orients[orient].invalidPos.push(i - 1)
-      for (let id in input) input[id].used = false
+      for (const id in input) input[id].used = false
       i = -1
     }
   }
 
   // Orient chosen tile order
-  let tileGrid = Array(size).fill().map(() => Array(size).fill())
+  const tileGrid = Array(size).fill().map(() => Array(size).fill())
   for (let y = 0; y < size; y++) {
     for (let x = 0; x < size; x++) {
-      let [id, orient] = idGrid[y][x]
+      const [id, orient] = idGrid[y][x]
       let tile = input[id].tile
       if (orient % 2 === 1) tile = flip(tile)
       if (Math.floor(orient / 2) === 1) tile = rot90(tile)
@@ -316,14 +317,14 @@ function part2 (input) {
   }
 
   // Construct image
-  let iSize = size * 8
-  let image = Array(iSize).fill().map(() => Array(iSize).fill())
+  const iSize = size * 8
+  const image = Array(iSize).fill().map(() => Array(iSize).fill())
   for (let y = 0; y < iSize; y++) {
     for (let x = 0; x < iSize; x++) {
-      let ax = Math.floor(x / 8)
-      let ay = Math.floor(y / 8)
-      let bx = (x % 8) + 1
-      let by = (y % 8) + 1
+      const ax = Math.floor(x / 8)
+      const ay = Math.floor(y / 8)
+      const bx = (x % 8) + 1
+      const by = (y % 8) + 1
       image[y][x] = tileGrid[ay][ax][by][bx]
     }
   }
@@ -339,7 +340,7 @@ function part2 (input) {
     for (let iy = 0; iy < image.length - monster.length; iy++) {
       for (let ix = 0; ix < image[0].length - monster[0].length; ix++) {
         let found = true
-        for (let [jx, jy] of monsterCoords) {
+        for (const [jx, jy] of monsterCoords) {
           if (imageCopy[iy + jy][ix + jx] !== 1) {
             found = false
             break
@@ -347,7 +348,7 @@ function part2 (input) {
         }
         if (found) {
           monsters = true
-          for (let [jx, jy] of monsterCoords) {
+          for (const [jx, jy] of monsterCoords) {
             imageCopy[iy + jy][ix + jx] = 0
           }
         }
@@ -361,7 +362,7 @@ function part2 (input) {
 
 function log (name, func, input, expected) {
   console.time(name)
-  let out = func(input)
+  const out = func(input)
   console.timeEnd(name)
   if (expected != null) {
     console.assert(out === expected, 'expected:', expected)
